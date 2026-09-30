@@ -11,16 +11,21 @@ export const contentType = "image/png";
 // Always reflects live rates.
 export const dynamic = "force-dynamic";
 
-const INK = "#111111";
-const INK_2 = "#5d5d5b";
-const INK_3 = "#9a9a96";
-const ACCENT = "#0fa968";
-const ACCENT_INK = "#067047";
+// Dark palette, matching the app's dark theme tokens.
+const CANVAS = "#0c0c0c";
+const SURFACE = "#171717";
+const SURFACE_2 = "#202020";
+const HAIRLINE = "rgba(255,255,255,0.08)";
+const INK = "#f5f5f3";
+const INK_2 = "#a9a9a5";
+const INK_3 = "#76766f";
+const ACCENT = "#2bd488";
+const ACCENT_INK = "#5be3a6";
 const GRADE: Record<Grade, [string, string]> = {
-  A: ["#0fa968", "#e3f6ec"],
-  B: ["#3a7bfd", "#e8f0ff"],
-  C: ["#e08a00", "#fdf1dc"],
-  D: ["#e5484d", "#fde7e7"],
+  A: ["#2bd488", "rgba(43,212,136,0.14)"],
+  B: ["#6b9bff", "rgba(107,155,255,0.15)"],
+  C: ["#f5a524", "rgba(245,165,36,0.15)"],
+  D: ["#ff6369", "rgba(255,99,105,0.15)"],
 };
 
 const usd = (n: number) => `$${Math.round(n).toLocaleString("en-US")}`;
@@ -53,32 +58,32 @@ export default async function Image() {
           width: "100%",
           height: "100%",
           display: "flex",
-          background: "#f4f4f1",
+          background: CANVAS,
           fontFamily: "Inter",
           position: "relative",
         }}
       >
-        {/* Soft washes */}
+        {/* Soft washes: one full-canvas layer each, so the falloff never shows an edge. */}
         <div
           style={{
             position: "absolute",
-            top: -260,
-            left: -200,
-            width: 760,
-            height: 760,
-            borderRadius: 9999,
-            background: "radial-gradient(circle, rgba(15,169,104,0.16), rgba(15,169,104,0) 70%)",
+            top: 0,
+            left: 0,
+            width: 1200,
+            height: 630,
+            display: "flex",
+            backgroundImage: "radial-gradient(circle at 8% 0%, rgba(43,212,136,0.24), rgba(43,212,136,0) 50%)",
           }}
         />
         <div
           style={{
             position: "absolute",
-            bottom: -320,
-            right: -160,
-            width: 820,
-            height: 820,
-            borderRadius: 9999,
-            background: "radial-gradient(circle, rgba(58,123,253,0.13), rgba(58,123,253,0) 70%)",
+            top: 0,
+            left: 0,
+            width: 1200,
+            height: 630,
+            display: "flex",
+            backgroundImage: "radial-gradient(circle at 100% 100%, rgba(107,155,255,0.16), rgba(107,155,255,0) 55%)",
           }}
         />
 
@@ -119,8 +124,8 @@ export default async function Image() {
                   gap: 10,
                   padding: "12px 20px",
                   borderRadius: 999,
-                  background: "#ffffff",
-                  boxShadow: "0 8px 24px -10px rgba(17,17,17,0.18)",
+                  background: SURFACE,
+                  border: `1px solid ${HAIRLINE}`,
                   fontSize: 22,
                   color: INK,
                 }}
@@ -141,8 +146,9 @@ export default async function Image() {
               width: 440,
               padding: 30,
               borderRadius: 40,
-              background: "#ffffff",
-              boxShadow: "0 2px 6px rgba(17,17,17,0.04), 0 40px 80px -24px rgba(17,17,17,0.22)",
+              background: SURFACE,
+              border: `1px solid ${HAIRLINE}`,
+              boxShadow: "0 40px 90px -20px rgba(0,0,0,0.8), 0 0 80px -20px rgba(43,212,136,0.18)",
               transform: "rotate(2deg)",
             }}
           >
@@ -152,7 +158,7 @@ export default async function Image() {
                   display: "flex",
                   padding: "7px 14px",
                   borderRadius: 999,
-                  background: "#e3f6ec",
+                  background: GRADE.A[1],
                   color: ACCENT_INK,
                   fontFamily: "Nunito",
                   fontWeight: 800,
@@ -194,7 +200,7 @@ export default async function Image() {
                     gap: 14,
                     padding: "12px 14px",
                     borderRadius: 22,
-                    background: "#f7f7f5",
+                    background: SURFACE_2,
                   }}
                 >
                   <div
@@ -205,8 +211,8 @@ export default async function Image() {
                       width: 42,
                       height: 42,
                       borderRadius: 999,
-                      background: `hsl(${hue(o.protocol.name)} 70% 92%)`,
-                      color: `hsl(${hue(o.protocol.name)} 55% 35%)`,
+                      background: `hsl(${hue(o.protocol.name)} 35% 22%)`,
+                      color: `hsl(${hue(o.protocol.name)} 75% 72%)`,
                       fontFamily: "Nunito",
                       fontWeight: 800,
                       fontSize: 20,
@@ -270,7 +276,7 @@ function GradePill({ grade, label = false }: { grade: Grade; label?: boolean }) 
           height: label ? 22 : 17,
           borderRadius: 999,
           background: fg,
-          color: "#fff",
+          color: CANVAS,
         }}
       >
         {grade}
