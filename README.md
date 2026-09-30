@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# StableSave
 
-## Getting Started
+**Find where your stablecoins earn the most.** StableSave compares USDC and USDT savings rates across DeFi, grades each option A–D for safety, and explains everything in plain English. No wallet, no sign-up, no custody: when you pick an option, we send you straight to that pool on the official app.
 
-First, run the development server:
+## Features
+
+- **One question, one answer.** Enter an amount, pick USDC or USDT, choose how much risk you're comfortable with.
+- **Transparent safety grades.** Five weighted, public signals (app track record, pool size, rate stability, real interest vs. bonus tokens, time running). See `/methodology`.
+- **Deep links to the exact pool**, plus a step-by-step "how to deposit safely" guide.
+- **Real rate history**, earnings projections, side-by-side compare, shareable URLs (`?amount=…&asset=…&risk=…&pool=…`).
+- **Beginner-first copy** with tap-to-explain jargon, a first-visit welcome card, light/dark mode.
+
+## Stack
+
+Next.js 16 (App Router) · React 19 · Tailwind CSS v4 · Motion · Vaul · data from [DeFiLlama](https://defillama.com/yields).
+
+## Architecture
+
+| Path | What it does |
+| --- | --- |
+| `src/lib/server/yields.ts` | Aggregation service: fetches DeFiLlama pools + protocols, normalises USDC/USDT opportunities, in-memory stale-while-revalidate cache (10 min list, 30 min per pool), falls back to the bundled snapshot if upstream fails. |
+| `src/app/api/opportunities` | Normalised opportunity feed (CDN-cached). |
+| `src/app/api/pools/[id]` | Pool deep link + APY history. |
+| `src/lib/scoring.ts` | Safety score, grades and "best for you" ranking. |
+| `src/data/opportunities.json` | Fallback snapshot. Refresh with `node scripts/build-fixture.mjs`. |
+| `src/app/opengraph-image.tsx` | Social card rendered from live rates. |
+
+## Develop
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Optional: set `NEXT_PUBLIC_SITE_URL` to your custom domain so social cards and the sitemap use it. On Vercel the production URL is detected automatically.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Disclaimer
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+StableSave is a discovery tool, not financial advice. DeFi carries real risk, including total loss. Always verify on the official app before depositing.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Built with ♥ for the stable community.

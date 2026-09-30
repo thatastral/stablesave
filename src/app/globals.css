@@ -1,26 +1,239 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --canvas: #f4f4f1;
+  --surface: #ffffff;
+  --surface-2: #f7f7f5;
+  --sunken: #efefeb;
+  --ink: #111111;
+  --ink-2: #5d5d5b;
+  --ink-3: #9a9a96;
+  --hairline: rgba(17, 17, 17, 0.06);
+  --hairline-strong: rgba(17, 17, 17, 0.1);
+
+  --accent: #0fa968;
+  --accent-soft: #e3f6ec;
+  --accent-ink: #067047;
+  --blue: #3a7bfd;
+  --blue-soft: #e8f0ff;
+
+  --grade-a: #0fa968;
+  --grade-a-soft: #e3f6ec;
+  --grade-b: #3a7bfd;
+  --grade-b-soft: #e8f0ff;
+  --grade-c: #e08a00;
+  --grade-c-soft: #fdf1dc;
+  --grade-d: #e5484d;
+  --grade-d-soft: #fde7e7;
+
+  --shadow-card: 0 1px 1px rgba(17, 17, 17, 0.02), 0 2px 6px rgba(17, 17, 17, 0.03),
+    0 12px 32px -12px rgba(17, 17, 17, 0.08);
+  --shadow-float: 0 2px 4px rgba(17, 17, 17, 0.04), 0 16px 48px -8px rgba(17, 17, 17, 0.18);
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
+/* Dark tokens apply when the user picks dark, or follows a dark system. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not([data-theme="light"]) {
+    --canvas: #0c0c0c;
+    --surface: #171717;
+    --surface-2: #1d1d1d;
+    --sunken: #222222;
+    --ink: #f5f5f3;
+    --ink-2: #a9a9a5;
+    --ink-3: #6e6e6b;
+    --hairline: rgba(255, 255, 255, 0.07);
+    --hairline-strong: rgba(255, 255, 255, 0.12);
+
+    --accent: #2bd488;
+    --accent-soft: rgba(43, 212, 136, 0.12);
+    --accent-ink: #5be3a6;
+    --blue: #6b9bff;
+    --blue-soft: rgba(107, 155, 255, 0.14);
+
+    --grade-a: #2bd488;
+    --grade-a-soft: rgba(43, 212, 136, 0.13);
+    --grade-b: #6b9bff;
+    --grade-b-soft: rgba(107, 155, 255, 0.14);
+    --grade-c: #f5a524;
+    --grade-c-soft: rgba(245, 165, 36, 0.14);
+    --grade-d: #ff6369;
+    --grade-d-soft: rgba(255, 99, 105, 0.14);
+
+    --shadow-card: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 12px 32px -12px rgba(0, 0, 0, 0.6);
+    --shadow-float: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 16px 48px -8px rgba(0, 0, 0, 0.7);
   }
 }
 
+:root[data-theme="dark"] {
+  --canvas: #0c0c0c;
+  --surface: #171717;
+  --surface-2: #1d1d1d;
+  --sunken: #222222;
+  --ink: #f5f5f3;
+  --ink-2: #a9a9a5;
+  --ink-3: #6e6e6b;
+  --hairline: rgba(255, 255, 255, 0.07);
+  --hairline-strong: rgba(255, 255, 255, 0.12);
+
+  --accent: #2bd488;
+  --accent-soft: rgba(43, 212, 136, 0.12);
+  --accent-ink: #5be3a6;
+  --blue: #6b9bff;
+  --blue-soft: rgba(107, 155, 255, 0.14);
+
+  --grade-a: #2bd488;
+  --grade-a-soft: rgba(43, 212, 136, 0.13);
+  --grade-b: #6b9bff;
+  --grade-b-soft: rgba(107, 155, 255, 0.14);
+  --grade-c: #f5a524;
+  --grade-c-soft: rgba(245, 165, 36, 0.14);
+  --grade-d: #ff6369;
+  --grade-d-soft: rgba(255, 99, 105, 0.14);
+
+  --shadow-card: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 12px 32px -12px rgba(0, 0, 0, 0.6);
+  --shadow-float: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 16px 48px -8px rgba(0, 0, 0, 0.7);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    color-scheme: dark;
+  }
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-sunken: var(--sunken);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-hairline: var(--hairline);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-ink: var(--accent-ink);
+  --color-blue: var(--blue);
+  --color-blue-soft: var(--blue-soft);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: ui-rounded, "SF Pro Rounded", var(--font-nunito), var(--font-inter), system-ui, sans-serif;
+  --shadow-card: var(--shadow-card);
+  --shadow-float: var(--shadow-float);
+}
+
+html {
+  color-scheme: light;
+  background: var(--canvas);
+  color: var(--ink);
+  -webkit-tap-highlight-color: transparent;
+  text-rendering: optimizeLegibility;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--canvas);
+  font-feature-settings: "cv11", "ss01";
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Press feedback on anything tappable. */
+.pressable {
+  transition: transform 160ms var(--ease-out), background-color 160ms ease, opacity 160ms ease;
+}
+.pressable:active {
+  transform: scale(0.97);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .row-hover:hover {
+    background: var(--surface-2);
+  }
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Soft edge fade for horizontal chip rails. */
+.fade-x {
+  mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 24px), transparent);
+}
+
+.enter {
+  animation: enter 520ms var(--ease-out) both;
+}
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(4px);
+  }
+}
+
+/* Remove number input spinners. */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter {
+    animation: fade 200ms ease both;
+  }
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+  }
+  .pressable:active {
+    transform: none;
+  }
+}
+
+/* Theme toggle: show the icon for the theme you'd switch TO. */
+.theme-icon {
+  transition: opacity 200ms var(--ease-out), transform 300ms var(--ease-out), filter 200ms ease;
+}
+.theme-icon-sun {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.6);
+  filter: blur(2px);
+}
+:root[data-theme="dark"] .theme-icon-sun {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+:root[data-theme="dark"] .theme-icon-moon {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.6);
+  filter: blur(2px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .theme-icon-sun {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+  :root:not([data-theme]) .theme-icon-moon {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.6);
+    filter: blur(2px);
+  }
 }
