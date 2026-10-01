@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion, useSpring, useTransform } from "motion/react";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useState, useSyncExternalStore } from "react";
 import type { Asset, Grade } from "@/lib/types";
 import { chainIcon } from "@/lib/format";
 import { GRADE_LABEL } from "@/lib/scoring";
@@ -37,7 +37,7 @@ export function TokenIcon({ asset, size = 20 }: { asset: Asset; size?: number })
 function FallbackMark({ name, size }: { name: string; size: number }) {
   return (
     <span
-      className="grid place-items-center rounded-full bg-sunken font-display font-bold text-ink-2"
+      className="grid place-items-center rounded-full bg-sunken font-display font-semibold text-ink-2"
       style={{ width: size, height: size, fontSize: size * 0.42 }}
     >
       {name.charAt(0)}
@@ -110,12 +110,12 @@ export function GradeBadge({ grade, withLabel = false }: { grade: Grade; withLab
   const s = GRADE_STYLE[grade];
   return (
     <span
-      className="inline-flex h-6 items-center gap-1.5 rounded-full pr-2.5 pl-1 text-[12px] font-semibold"
+      className="inline-flex h-6 items-center gap-1.5 rounded-[6px] pr-2 pl-[3px] text-[12px] font-medium"
       style={{ background: s.bg, color: s.fg }}
       title={GRADE_LABEL[grade]}
     >
       <span
-        className="grid size-[18px] place-items-center rounded-full font-display text-[11px] font-extrabold text-white"
+        className="grid size-[18px] place-items-center rounded-[4px] font-mono text-[11px] font-medium text-white"
         style={{ background: s.fg }}
       >
         {grade}
@@ -159,9 +159,13 @@ export function Segmented<T extends string>({
   label: string;
 }) {
   const id = useId();
-  const h = size === "sm" ? "h-8 text-[13px]" : "h-10 text-[14px]";
+  const h = size === "sm" ? "h-7 text-[13px]" : "h-9 text-[14px]";
   return (
-    <div role="radiogroup" aria-label={label} className="inline-flex rounded-full bg-sunken p-1">
+    <div
+      role="radiogroup"
+      aria-label={label}
+      className="inline-flex rounded-[10px] border border-line bg-surface-2 p-[3px]"
+    >
       {options.map((o) => {
         const active = o.key === value;
         return (
@@ -170,7 +174,7 @@ export function Segmented<T extends string>({
             role="radio"
             aria-checked={active}
             onClick={() => onChange(o.key)}
-            className={`pressable relative flex items-center gap-1.5 rounded-full px-3.5 font-semibold ${h} ${
+            className={`relative flex items-center gap-1.5 rounded-[7px] px-3 font-medium transition-colors duration-150 ${h} ${
               active ? "text-ink" : "text-ink-3 hover:text-ink-2"
             }`}
           >
@@ -178,7 +182,7 @@ export function Segmented<T extends string>({
               <motion.span
                 layoutId={`seg-${id}`}
                 transition={spring}
-                className="absolute inset-0 rounded-full bg-surface shadow-[0_1px_2px_rgba(0,0,0,0.06),0_2px_8px_rgba(0,0,0,0.04)]"
+                className="absolute inset-0 rounded-[7px] border border-line bg-surface shadow-[0_1px_1px_rgba(0,0,0,0.04)]"
               />
             )}
             <span className="relative flex items-center gap-1.5">{o.label}</span>
@@ -232,5 +236,18 @@ export function ShieldIcon({ size = 16 }: { size?: number }) {
       />
       <path d="m5.8 8 1.6 1.6L10.4 6.6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
+  );
+}
+
+/** True on viewports at least `minWidth` wide. False during SSR (mobile-first). */
+export function useMinWidth(minWidth: number) {
+  return useSyncExternalStore(
+    (cb) => {
+      const mq = window.matchMedia(`(min-width: ${minWidth}px)`);
+      mq.addEventListener("change", cb);
+      return () => mq.removeEventListener("change", cb);
+    },
+    () => window.matchMedia(`(min-width: ${minWidth}px)`).matches,
+    () => false,
   );
 }

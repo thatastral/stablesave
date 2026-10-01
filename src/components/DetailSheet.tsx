@@ -8,6 +8,7 @@ import { formatPct, formatUsd, hostname } from "@/lib/format";
 import { GRADE_LABEL, projectedEarnings } from "@/lib/scoring";
 import { fetchPoolDetail, type PoolDetail } from "@/lib/data";
 import { ApyChart } from "./ApyChart";
+import { Panel } from "./Panel";
 import { AnimatedNumber, ArrowUpRight, ProtocolMark, Segmented, ShieldIcon, TokenIcon, gradeColor, spring } from "./primitives";
 import { Term } from "./Term";
 
@@ -30,18 +31,9 @@ export function DetailSheet({
   onOpenChange: (o: boolean) => void;
 }) {
   return (
-    <Drawer.Root open={open} onOpenChange={onOpenChange}>
-      <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 z-40 bg-black/25 backdrop-blur-[2px]" />
-        <Drawer.Content
-          aria-describedby={undefined}
-          className="fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[94dvh] w-full max-w-[560px] flex-col rounded-t-[32px] bg-surface outline-none sm:bottom-3 sm:rounded-[32px] sm:after:hidden"
-        >
-          <div className="mx-auto mt-2.5 h-1.5 w-10 shrink-0 rounded-full" style={{ background: "var(--hairline-strong)" }} />
-          {item && <SheetBody key={item.id} item={item} amount={amount} />}
-        </Drawer.Content>
-      </Drawer.Portal>
-    </Drawer.Root>
+    <Panel open={open} onOpenChange={onOpenChange} width={500}>
+      {item && <SheetBody key={item.id} item={item} amount={amount} />}
+    </Panel>
   );
 }
 
@@ -88,12 +80,12 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
 
   return (
     <>
-      <div className="no-scrollbar flex-1 overflow-y-auto px-5 pt-4 pb-4 sm:px-6">
+      <div className="no-scrollbar flex-1 overflow-y-auto px-5 pt-4 pb-4 md:px-6 md:pt-6">
         {/* Header */}
         <div className="flex items-center gap-3.5">
           <ProtocolMark logo={item.protocol.logo} name={item.protocol.name} chain={item.chain} size={52} />
           <div className="min-w-0 flex-1">
-            <Drawer.Title className="truncate font-display text-[22px] leading-tight font-extrabold tracking-[-0.01em] text-ink">
+            <Drawer.Title className="truncate pr-10 font-display text-[22px] leading-tight font-semibold tracking-[-0.02em] text-ink">
               {item.protocol.name}
             </Drawer.Title>
             <p className="truncate text-[14px] text-ink-3">
@@ -110,7 +102,7 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
               <p className="flex items-center gap-1.5 text-[13px] font-medium text-ink-3">
                 {scrub ? "Yearly rate on" : "Yearly rate today"} <Term k="apy" icon />
               </p>
-              <p className="mt-1 font-display text-[44px] leading-none font-extrabold tracking-[-0.03em] text-ink">
+              <p className="mt-1 font-display text-[44px] leading-none font-semibold tracking-[-0.04em] text-ink">
                 <AnimatedNumber value={shown} format={(n) => formatPct(n)} />
               </p>
               <p className="mt-1.5 h-5 text-[13px] text-ink-3">
@@ -135,12 +127,12 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
             />
           </div>
           <div className="-mx-1 mt-4 h-[150px]">
-            {detail.status === "loading" && <div className="h-full animate-pulse rounded-[20px] bg-surface-2" />}
+            {detail.status === "loading" && <div className="h-full animate-pulse rounded-[10px] bg-surface-2" />}
             {detail.status === "ready" && history.length > 1 && (
               <ApyChart key={range} data={history} onScrub={setScrub} />
             )}
             {(detail.status === "error" || (detail.status === "ready" && history.length < 2)) && (
-              <div className="grid h-full place-items-center rounded-[20px] bg-surface-2 text-[13px] text-ink-3">
+              <div className="grid h-full place-items-center rounded-[10px] bg-surface-2 text-[13px] text-ink-3">
                 Rate history isn’t available right now
               </div>
             )}
@@ -152,9 +144,9 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
         <Section title={`What ${formatUsd(amount)} could earn`}>
           <div className="grid grid-cols-3 gap-2">
             {HORIZONS.map((h) => (
-              <div key={h.days} className="rounded-[18px] bg-surface-2 px-3 py-3">
+              <div key={h.days} className="rounded-[10px] border border-line px-3 py-3">
                 <p className="text-[12px] font-medium text-ink-3">In {h.label}</p>
-                <p className="mt-0.5 font-display text-[18px] font-extrabold text-accent-ink tabular">
+                <p className="mt-0.5 font-display text-[18px] font-semibold text-accent-ink tabular">
                   +<AnimatedNumber value={projectedEarnings(amount, item.apy, h.days)} format={(n) => formatUsd(n)} />
                 </p>
               </div>
@@ -203,10 +195,10 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
 
         {/* Risk */}
         <Section title="How risky is it?">
-          <div className="flex items-center gap-4 rounded-[22px] p-4" style={{ background: g.bg }}>
+          <div className="flex items-center gap-4 rounded-[10px] p-4" style={{ background: g.bg }}>
             <ScoreRing score={item.safety} color={g.fg} />
             <div className="min-w-0">
-              <p className="flex items-center gap-1.5 font-display text-[18px] font-extrabold" style={{ color: g.fg }}>
+              <p className="flex items-center gap-1.5 font-display text-[18px] font-semibold" style={{ color: g.fg }}>
                 Grade {item.grade}: {GRADE_LABEL[item.grade]} <Term k="grade" icon />
               </p>
               <p className="text-[13px] text-ink-2">{gradeSummary(item.grade)}</p>
@@ -254,7 +246,7 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
             </Step>
             <Step n={4}>New to this? Try a small amount first, then add more once you’re comfortable.</Step>
           </ol>
-          <p className="mt-3 rounded-[16px] bg-surface-2 p-3 text-[12px] leading-relaxed text-ink-3">
+          <p className="mt-3 rounded-[10px] bg-surface-2 p-3 text-[12px] leading-relaxed text-ink-3">
             DeFi apps aren’t banks, so there’s no deposit insurance. Bugs, hacks, or a stablecoin losing its $1 value
             could mean losing money. Only deposit what you can afford to lose.
           </p>
@@ -262,7 +254,7 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
 
         {/* Facts */}
         <Section title="Quick facts">
-          <dl className="grid grid-cols-2 gap-2">
+          <dl className="overflow-hidden rounded-[10px] border border-line">
             <Fact label={<Term k="deposits">Money in pool</Term>} value={formatUsd(item.tvlUsd, true)} />
             <Fact label="Trusted to the app" value={formatUsd(item.protocol.tvlUsd, true)} />
             <Fact label="Type of app" value={item.protocol.category} />
@@ -274,13 +266,13 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
       </div>
 
       {/* Sticky CTA: the whole product funnels to this one action. */}
-      <div className="shrink-0 border-t border-hairline bg-surface px-5 pt-3 pb-[max(env(safe-area-inset-bottom),16px)] sm:rounded-b-[32px] sm:px-6">
+      <div className="shrink-0 border-t border-line bg-surface px-5 pt-3 pb-[max(env(safe-area-inset-bottom),16px)] md:rounded-b-[14px] md:px-6">
         <a
           href={href}
           target="_blank"
           rel="noopener noreferrer"
           aria-busy={detail.status === "loading"}
-          className="pressable flex h-14 w-full items-center justify-center gap-2 rounded-full bg-ink text-[16px] font-semibold text-canvas"
+          className="pressable flex h-12 w-full items-center justify-center gap-2 rounded-[10px] bg-ink text-[15px] font-medium text-canvas"
         >
           {exact ? "Go to this pool on" : "Open"} {site} <ArrowUpRight />
         </a>
@@ -303,8 +295,8 @@ function gradeSummary(g: ScoredOpportunity["grade"]) {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="mt-8">
-      <h3 className="mb-3 font-display text-[17px] font-extrabold text-ink">{title}</h3>
+    <section className="mt-8 border-t border-line pt-5">
+      <h3 className="mb-3 text-[15px] font-semibold tracking-[-0.01em] text-ink">{title}</h3>
       {children}
     </section>
   );
@@ -312,9 +304,9 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function Step({ n, children }: { n: number; children: React.ReactNode }) {
   return (
-    <li className="flex gap-3 rounded-[16px] bg-surface-2 p-3 text-[14px] leading-snug text-ink-2">
-      <span className="grid size-6 shrink-0 place-items-center rounded-full bg-ink font-display text-[12px] font-extrabold text-canvas">
-        {n}
+    <li className="flex gap-3 rounded-[10px] bg-surface-2 p-3 text-[14px] leading-snug text-ink-2">
+      <span className="grid size-6 shrink-0 place-items-center rounded-[6px] border border-line bg-surface font-mono text-[11px] text-ink-2">
+        {String(n).padStart(2, "0")}
       </span>
       <span className="pt-0.5">{children}</span>
     </li>
@@ -346,9 +338,9 @@ function Legend({
 
 function Fact({ label, value }: { label: React.ReactNode; value: string }) {
   return (
-    <div className="rounded-[16px] bg-surface-2 px-3.5 py-3">
-      <dt className="text-[12px] text-ink-3">{label}</dt>
-      <dd className="mt-0.5 truncate text-[15px] font-semibold text-ink tabular">{value}</dd>
+    <div className="flex items-baseline justify-between gap-4 border-b border-line px-3.5 py-2.5 last:border-b-0">
+      <dt className="text-[13px] text-ink-3">{label}</dt>
+      <dd className="truncate text-[14px] font-medium text-ink tabular">{value}</dd>
     </div>
   );
 }
@@ -381,7 +373,7 @@ function ScoreRing({ score, color }: { score: number; color: string }) {
           transition={{ ...spring, duration: 0.8, delay: 0.1 }}
         />
       </svg>
-      <span className="font-display text-[17px] font-extrabold tabular" style={{ color }}>
+      <span className="font-display text-[17px] font-semibold tabular" style={{ color }}>
         {score}
       </span>
     </div>

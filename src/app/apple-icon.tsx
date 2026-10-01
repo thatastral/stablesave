@@ -12,13 +12,13 @@ export default function AppleIcon() {
           width: "100%",
           height: "100%",
           display: "flex",
-          background: "linear-gradient(135deg, #2FD98E, #079A5C)",
+          background: "#0FA968",
         }}
       >
         <svg width="180" height="180" viewBox="0 0 32 32">
-          <rect x="6.5" y="19.5" width="12" height="5" rx="2.5" fill="#fff" fillOpacity=".55" />
-          <rect x="10" y="13.5" width="12" height="5" rx="2.5" fill="#fff" fillOpacity=".78" />
-          <rect x="13.5" y="7.5" width="12" height="5" rx="2.5" fill="#fff" />
+          <rect x="6.5" y="19.5" width="12" height="5" rx="1.5" fill="#fff" fillOpacity=".55" />
+          <rect x="10" y="13.5" width="12" height="5" rx="1.5" fill="#fff" fillOpacity=".78" />
+          <rect x="13.5" y="7.5" width="12" height="5" rx="1.5" fill="#fff" />
         </svg>
       </div>
     ),

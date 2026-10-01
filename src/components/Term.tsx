@@ -89,7 +89,7 @@ export function Term({
             exit={{ opacity: 0, scale: 0.98, transition: { duration: 0.1 } }}
             transition={{ duration: 0.16, ease: [0.23, 1, 0.32, 1] }}
             style={{ left: offset, transformOrigin: `${-offset + 9}px ${above ? "100%" : "0%"}` }}
-            className={`absolute z-50 block w-[260px] rounded-[18px] bg-ink p-3.5 text-left text-[13px] leading-relaxed font-normal tracking-normal normal-case text-canvas shadow-float ${
+            className={`absolute z-50 block w-[260px] rounded-[10px] bg-ink p-3.5 text-left text-[13px] leading-relaxed font-normal tracking-normal normal-case text-canvas shadow-float ${
               above ? "bottom-full mb-2" : "top-full mt-2"
             }`}
           >

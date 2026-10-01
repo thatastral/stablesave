@@ -23,7 +23,7 @@ export function ThemeToggle() {
       onClick={toggle}
       aria-label="Switch between light and dark mode"
       title="Switch light / dark"
-      className="pressable relative grid size-9 place-items-center rounded-full bg-surface text-ink-2 shadow-card hover:text-ink"
+      className="pressable relative grid size-8 place-items-center rounded-[8px] border border-line bg-surface text-ink-2 hover:text-ink"
     >
       <svg className="theme-icon theme-icon-moon absolute" width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden>
         <path

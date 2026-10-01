@@ -1,9 +1,11 @@
 import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import sharp from "sharp";
 import { getOpportunityFeed } from "@/lib/server/yields";
-import { projectedEarnings, rank, scoreAll, GRADE_LABEL } from "@/lib/scoring";
-import type { Grade } from "@/lib/types";
+import { GRADE_LABEL, projectedEarnings, rank, scoreAll } from "@/lib/scoring";
+import { chainIcon } from "@/lib/format";
+import type { Grade, ScoredOpportunity } from "@/lib/types";
 
 export const alt = "StableSave: compare USDC and USDT savings rates across DeFi, with clear safety grades.";
 export const size = { width: 1200, height: 630 };
@@ -13,14 +15,13 @@ export const dynamic = "force-dynamic";
 
 // Dark palette, matching the app's dark theme tokens.
 const CANVAS = "#0c0c0c";
-const SURFACE = "#171717";
-const SURFACE_2 = "#202020";
-const HAIRLINE = "rgba(255,255,255,0.08)";
+const SURFACE = "#141414";
+const SURFACE_2 = "#1a1a1a";
+const LINE = "rgba(255,255,255,0.09)";
 const INK = "#f5f5f3";
 const INK_2 = "#a9a9a5";
-const INK_3 = "#76766f";
+const INK_3 = "#6e6e6b";
 const ACCENT = "#2bd488";
-const ACCENT_INK = "#5be3a6";
 const GRADE: Record<Grade, [string, string]> = {
   A: ["#2bd488", "rgba(43,212,136,0.14)"],
   B: ["#6b9bff", "rgba(107,155,255,0.15)"],
@@ -29,13 +30,29 @@ const GRADE: Record<Grade, [string, string]> = {
 };
 
 const usd = (n: number) => `$${Math.round(n).toLocaleString("en-US")}`;
-const hue = (s: string) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 360, 7);
+
+/** Logos are served as WebP, which the renderer can't draw, so convert to PNG. */
+async function logo(url: string, px: number): Promise<string | null> {
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(4000) });
+    if (!res.ok) return null;
+    const png = await sharp(Buffer.from(await res.arrayBuffer()))
+      .resize(px * 2, px * 2, { fit: "cover" })
+      .png()
+      .toBuffer();
+    return `data:image/png;base64,${png.toString("base64")}`;
+  } catch {
+    return null;
+  }
+}
 
 export default async function Image() {
-  const [display, bold, body, feed] = await Promise.all([
-    readFile(join(process.cwd(), "assets/Nunito-ExtraBold.ttf")),
-    readFile(join(process.cwd(), "assets/Nunito-Bold.ttf")),
-    readFile(join(process.cwd(), "assets/Inter-Medium.ttf")),
+  const font = (f: string) => readFile(join(process.cwd(), "assets", f));
+  const [tight, mono, regular, medium, feed] = await Promise.all([
+    font("InterTight-SemiBold.ttf"),
+    font("GeistMono-Regular.ttf"),
+    font("Inter-Regular.ttf"),
+    font("Inter-Medium.ttf"),
     getOpportunityFeed(),
   ]);
 
@@ -48,7 +65,15 @@ export default async function Image() {
     asset: "USDC",
   })
     .filter((o, i, a) => a.findIndex((x) => x.protocol.slug === o.protocol.slug) === i)
-    .slice(0, 3);
+    .slice(0, 4);
+
+  const rows = await Promise.all(
+    picks.map(async (o) => ({
+      o,
+      logo: await logo(o.protocol.logo, 38),
+      chain: await logo(chainIcon(o.chain), 16),
+    })),
+  );
   const top = picks[0];
 
   return new ImageResponse(
@@ -58,183 +83,109 @@ export default async function Image() {
           width: "100%",
           height: "100%",
           display: "flex",
+          flexDirection: "column",
           background: CANVAS,
           fontFamily: "Inter",
-          position: "relative",
+          color: INK,
+          padding: "52px 64px 56px",
         }}
       >
-        {/* Soft washes: one full-canvas layer each, so the falloff never shows an edge. */}
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: 1200,
-            height: 630,
-            display: "flex",
-            backgroundImage: "radial-gradient(circle at 8% 0%, rgba(43,212,136,0.24), rgba(43,212,136,0) 50%)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: 1200,
-            height: 630,
-            display: "flex",
-            backgroundImage: "radial-gradient(circle at 100% 100%, rgba(107,155,255,0.16), rgba(107,155,255,0) 55%)",
-          }}
-        />
-
-        {/* Left: message */}
-        <div style={{ display: "flex", flexDirection: "column", padding: "64px 0 64px 72px", width: 640 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <Mark size={52} />
-            <div style={{ display: "flex", fontFamily: "Nunito", fontWeight: 800, fontSize: 36, color: INK, letterSpacing: -0.5 }}>
-              Stable<span style={{ color: ACCENT_INK }}>Save</span>
-            </div>
+        {/* Top bar */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <Mark size={34} />
+            <div style={{ display: "flex", fontFamily: "Inter Tight", fontSize: 28, letterSpacing: -0.8 }}>StableSave</div>
           </div>
-
-          <div
-            style={{
-              display: "flex",
-              marginTop: 58,
-              fontFamily: "Nunito",
-              fontWeight: 800,
-              fontSize: 72,
-              lineHeight: 1.02,
-              letterSpacing: -2,
-              color: INK,
-            }}
-          >
-            Find where your stablecoins earn the most.
-          </div>
-          <div style={{ display: "flex", marginTop: 24, fontSize: 27, lineHeight: 1.4, color: INK_2 }}>
-            Compare USDC & USDT savings rates across DeFi, with clear A–D safety grades.
-          </div>
-
-          <div style={{ display: "flex", gap: 12, marginTop: "auto" }}>
-            {["No wallet needed", "No sign-up", "Free"].map((t) => (
-              <div
-                key={t}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  padding: "12px 20px",
-                  borderRadius: 999,
-                  background: SURFACE,
-                  border: `1px solid ${HAIRLINE}`,
-                  fontSize: 22,
-                  color: INK,
-                }}
-              >
-                <div style={{ width: 10, height: 10, borderRadius: 999, background: ACCENT }} />
-                {t}
-              </div>
-            ))}
+          <div style={{ display: "flex", fontFamily: "Geist Mono", fontSize: 16, color: INK_3, letterSpacing: 0.5 }}>
+            stablesave.vercel.app
           </div>
         </div>
 
-        {/* Right: product card */}
-        <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center", paddingRight: 64 }}>
+        <div style={{ display: "flex", flex: 1, marginTop: 44, gap: 56 }}>
+          {/* Message */}
+          <div style={{ display: "flex", flexDirection: "column", width: 520 }}>
+            <Label color={ACCENT}>Stablecoin savings, compared</Label>
+            <div
+              style={{
+                display: "flex",
+                marginTop: 22,
+                fontFamily: "Inter Tight",
+                fontSize: 64,
+                lineHeight: 1.03,
+                letterSpacing: -1.9,
+              }}
+            >
+              Find where your stablecoins earn the most.
+            </div>
+            <div style={{ display: "flex", marginTop: 22, fontSize: 24, lineHeight: 1.45, color: INK_2 }}>
+              Live USDC and USDT rates across DeFi, each with a plain-English A–D safety grade.
+            </div>
+            <div style={{ display: "flex", marginTop: "auto" }}>
+              <Label>No wallet · No sign-up · Free</Label>
+            </div>
+          </div>
+
+          {/* Ledger */}
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              width: 440,
-              padding: 30,
-              borderRadius: 40,
+              flex: 1,
+              alignSelf: "flex-start",
+              border: `1px solid ${LINE}`,
+              borderRadius: 16,
               background: SURFACE,
-              border: `1px solid ${HAIRLINE}`,
-              boxShadow: "0 40px 90px -20px rgba(0,0,0,0.8), 0 0 80px -20px rgba(43,212,136,0.18)",
-              transform: "rotate(2deg)",
+              overflow: "hidden",
             }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div
-                style={{
-                  display: "flex",
-                  padding: "7px 14px",
-                  borderRadius: 999,
-                  background: GRADE.A[1],
-                  color: ACCENT_INK,
-                  fontFamily: "Nunito",
-                  fontWeight: 800,
-                  fontSize: 16,
-                  letterSpacing: 1,
-                }}
-              >
-                ★ TOP PICK FOR YOU
-              </div>
-              {top && <GradePill grade={top.grade} label />}
-            </div>
-
-            <div style={{ display: "flex", marginTop: 26, fontSize: 20, color: INK_3 }}>
-              In a year, {usd(amount)} could earn
-            </div>
             <div
               style={{
                 display: "flex",
-                alignItems: "baseline",
-                fontFamily: "Nunito",
-                fontWeight: 800,
-                fontSize: 76,
-                letterSpacing: -2.5,
-                color: INK,
-                lineHeight: 1.05,
+                alignItems: "center",
+                padding: "13px 20px",
+                borderBottom: `1px solid ${LINE}`,
+                background: SURFACE_2,
               }}
             >
-              +{usd(top ? projectedEarnings(amount, top.apy) : 514)}
-              <span style={{ fontSize: 28, color: INK_3, marginLeft: 8, letterSpacing: 0 }}>/yr</span>
+              <div style={{ display: "flex", flex: 1 }}>
+                <Label>Option</Label>
+              </div>
+              <div style={{ display: "flex", width: 96, justifyContent: "flex-end" }}>
+                <Label>Rate</Label>
+              </div>
+              <div style={{ display: "flex", width: 124, justifyContent: "flex-end" }}>
+                <Label>Safety</Label>
+              </div>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", marginTop: 22, gap: 10 }}>
-              {picks.map((o) => (
-                <div
-                  key={o.id}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 14,
-                    padding: "12px 14px",
-                    borderRadius: 22,
-                    background: SURFACE_2,
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: 42,
-                      height: 42,
-                      borderRadius: 999,
-                      background: `hsl(${hue(o.protocol.name)} 35% 22%)`,
-                      color: `hsl(${hue(o.protocol.name)} 75% 72%)`,
-                      fontFamily: "Nunito",
-                      fontWeight: 800,
-                      fontSize: 20,
-                    }}
-                  >
-                    {o.protocol.name.charAt(0)}
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-                    <div style={{ display: "flex", fontFamily: "Nunito", fontWeight: 700, fontSize: 21, color: INK }}>
-                      {o.protocol.name}
-                    </div>
-                    <div style={{ display: "flex", fontSize: 16, color: INK_3 }}>{o.chain}</div>
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
-                    <div style={{ display: "flex", fontFamily: "Nunito", fontWeight: 800, fontSize: 22, color: INK }}>
-                      {o.apy.toFixed(2)}%
-                    </div>
-                    <GradePill grade={o.grade} />
-                  </div>
+            {rows.map(({ o, logo, chain }, i) => (
+              <Row key={o.id} o={o} logo={logo} chain={chain} first={i === 0} />
+            ))}
+
+            {top && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "15px 20px",
+                  borderTop: `1px solid ${LINE}`,
+                  background: SURFACE_2,
+                }}
+              >
+                <div style={{ display: "flex", fontSize: 16, color: INK_3 }}>
+                  {usd(amount)} USDC in {top.protocol.name}, for a year
                 </div>
-              ))}
-            </div>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
+                  <div
+                    style={{ display: "flex", fontFamily: "Inter Tight", fontSize: 24, color: ACCENT, letterSpacing: -0.6 }}
+                  >
+                    +{usd(projectedEarnings(amount, top.apy))}
+                  </div>
+                  <div style={{ display: "flex", fontSize: 15, color: INK_3 }}>/yr</div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -242,46 +193,143 @@ export default async function Image() {
     {
       ...size,
       fonts: [
-        { name: "Nunito", data: display, weight: 800, style: "normal" },
-        { name: "Nunito", data: bold, weight: 700, style: "normal" },
-        { name: "Inter", data: body, weight: 500, style: "normal" },
+        { name: "Inter Tight", data: tight, weight: 600, style: "normal" },
+        { name: "Geist Mono", data: mono, weight: 400, style: "normal" },
+        { name: "Inter", data: regular, weight: 400, style: "normal" },
+        { name: "Inter", data: medium, weight: 500, style: "normal" },
       ],
     },
   );
 }
 
-function GradePill({ grade, label = false }: { grade: Grade; label?: boolean }) {
-  const [fg, bg] = GRADE[grade];
+function Row({
+  o,
+  logo,
+  chain,
+  first,
+}: {
+  o: ScoredOpportunity;
+  logo: string | null;
+  chain: string | null;
+  first: boolean;
+}) {
+  const [fg, bg] = GRADE[o.grade];
   return (
     <div
       style={{
         display: "flex",
         alignItems: "center",
-        gap: 6,
-        padding: label ? "5px 12px 5px 5px" : "3px 9px 3px 3px",
-        borderRadius: 999,
-        background: bg,
-        color: fg,
-        fontFamily: "Nunito",
-        fontWeight: 800,
-        fontSize: label ? 16 : 13,
+        padding: "14px 20px",
+        borderTop: first ? "none" : `1px solid ${LINE}`,
       }}
     >
+      <div style={{ display: "flex", alignItems: "center", flex: 1, gap: 14 }}>
+        <div style={{ display: "flex", position: "relative", width: 38, height: 38 }}>
+          {logo ? (
+            <img src={logo} width={38} height={38} style={{ borderRadius: 999 }} alt="" />
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                width: 38,
+                height: 38,
+                borderRadius: 999,
+                background: SURFACE_2,
+                alignItems: "center",
+                justifyContent: "center",
+                fontFamily: "Inter Tight",
+                fontSize: 17,
+                color: INK_2,
+              }}
+            >
+              {o.protocol.name.charAt(0)}
+            </div>
+          )}
+          {chain && (
+            <div
+              style={{
+                display: "flex",
+                position: "absolute",
+                right: -4,
+                bottom: -4,
+                padding: 2,
+                borderRadius: 999,
+                background: SURFACE,
+              }}
+            >
+              <img src={chain} width={16} height={16} style={{ borderRadius: 999 }} alt="" />
+            </div>
+          )}
+        </div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ display: "flex", fontFamily: "Inter Tight", fontSize: 20, letterSpacing: -0.3 }}>
+            {o.protocol.name}
+          </div>
+          <div style={{ display: "flex", fontSize: 15, color: INK_3, marginTop: 2 }}>{o.chain}</div>
+        </div>
+      </div>
       <div
         style={{
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: label ? 22 : 17,
-          height: label ? 22 : 17,
-          borderRadius: 999,
-          background: fg,
-          color: CANVAS,
+          width: 96,
+          justifyContent: "flex-end",
+          fontFamily: "Inter Tight",
+          fontSize: 22,
+          letterSpacing: -0.4,
         }}
       >
-        {grade}
+        {o.apy.toFixed(2)}%
       </div>
-      {label ? GRADE_LABEL[grade] : "Grade"}
+      <div style={{ display: "flex", width: 124, justifyContent: "flex-end" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            padding: "3px 8px 3px 3px",
+            borderRadius: 6,
+            background: bg,
+            color: fg,
+            fontWeight: 500,
+            fontSize: 14,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 20,
+              height: 20,
+              borderRadius: 4,
+              background: fg,
+              color: CANVAS,
+              fontFamily: "Geist Mono",
+              fontSize: 12,
+            }}
+          >
+            {o.grade}
+          </div>
+          {GRADE_LABEL[o.grade]}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Label({ children, color = INK_3 }: { children: React.ReactNode; color?: string }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        fontFamily: "Geist Mono",
+        fontSize: 14,
+        letterSpacing: 1.6,
+        textTransform: "uppercase",
+        color,
+      }}
+    >
+      {children}
     </div>
   );
 }
@@ -289,16 +337,10 @@ function GradePill({ grade, label = false }: { grade: Grade; label?: boolean }) 
 function Mark({ size }: { size: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32">
-      <defs>
-        <linearGradient id="g" x1="4" y1="2" x2="28" y2="30" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#2FD98E" />
-          <stop offset="1" stopColor="#079A5C" />
-        </linearGradient>
-      </defs>
-      <path d="M16 0c11.3 0 16 4.7 16 16s-4.7 16-16 16S0 27.3 0 16 4.7 0 16 0Z" fill="url(#g)" />
-      <rect x="6.5" y="19.5" width="12" height="5" rx="2.5" fill="#fff" fillOpacity=".55" />
-      <rect x="10" y="13.5" width="12" height="5" rx="2.5" fill="#fff" fillOpacity=".78" />
-      <rect x="13.5" y="7.5" width="12" height="5" rx="2.5" fill="#fff" />
+      <rect width="32" height="32" rx="8" fill="#0FA968" />
+      <rect x="6.5" y="19.5" width="12" height="5" rx="1.5" fill="#fff" fillOpacity=".55" />
+      <rect x="10" y="13.5" width="12" height="5" rx="1.5" fill="#fff" fillOpacity=".78" />
+      <rect x="13.5" y="7.5" width="12" height="5" rx="1.5" fill="#fff" />
     </svg>
   );
 }

@@ -1,12 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <defs>
-    <linearGradient id="g" x1="4" y1="2" x2="28" y2="30" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#2FD98E"/>
-      <stop offset="1" stop-color="#079A5C"/>
-    </linearGradient>
-  </defs>
-  <path d="M16 0c11.3 0 16 4.7 16 16s-4.7 16-16 16S0 27.3 0 16 4.7 0 16 0Z" fill="url(#g)"/>
-  <rect x="6.5" y="19.5" width="12" height="5" rx="2.5" fill="#fff" fill-opacity=".55"/>
-  <rect x="10" y="13.5" width="12" height="5" rx="2.5" fill="#fff" fill-opacity=".78"/>
-  <rect x="13.5" y="7.5" width="12" height="5" rx="2.5" fill="#fff"/>
+  <rect width="32" height="32" rx="8" fill="#0FA968"/>
+  <rect x="6.5" y="19.5" width="12" height="5" rx="1.5" fill="#fff" fill-opacity=".55"/>
+  <rect x="10" y="13.5" width="12" height="5" rx="1.5" fill="#fff" fill-opacity=".78"/>
+  <rect x="13.5" y="7.5" width="12" height="5" rx="1.5" fill="#fff"/>
 </svg>

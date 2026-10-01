@@ -61,7 +61,10 @@ export function Explorer({
   }, [scored, asset]);
 
   const ranked = useMemo(() => rank(scored, { appetite, sort, chains, asset }), [scored, appetite, sort, chains, asset]);
-  const [top, ...rest] = ranked;
+  // The headline pick should be one a beginner can act on: grade A/B unless they chose "Go bigger".
+  const top =
+    appetite === "adventurous" ? ranked[0] : (ranked.find((o) => o.grade === "A" || o.grade === "B") ?? ranked[0]);
+  const rest = ranked.filter((o) => o !== top);
 
   const stats = useMemo(() => {
     const pool = scored.filter((o) => o.asset === asset);
@@ -93,23 +96,26 @@ export function Explorer({
 
   return (
     <>
-      <Composer
-        amount={amount}
-        asset={asset}
-        appetite={appetite}
-        onAmount={setAmount}
-        onAsset={(a) => {
-          setAsset(a);
-          setChains([]);
-        }}
-        onAppetite={setAppetite}
-      />
+      <div className="mx-auto w-full max-w-[1080px] px-4 pt-10 sm:px-6 sm:pt-14">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-end lg:gap-8">
+          <Composer
+            amount={amount}
+            asset={asset}
+            appetite={appetite}
+            onAmount={setAmount}
+            onAsset={(a) => {
+              setAsset(a);
+              setChains([]);
+            }}
+            onAppetite={setAppetite}
+          />
+          <MarketPanel {...stats} asset={asset} updatedAt={updatedAt} />
+        </div>
+      </div>
 
-      <div className="mx-auto mt-10 w-full max-w-[640px] px-4 pb-40">
-        <MarketStrip {...stats} asset={asset} updatedAt={updatedAt} />
-
+      <div className="mx-auto mt-12 w-full max-w-[1080px] px-4 pb-40 sm:px-6">
         <LayoutGroup>
-          <div className="mt-6 flex flex-col gap-6">
+          <div className="flex flex-col gap-5">
             {top ? (
               <>
                 {sort === "match" && chains.length === 0 ? (
@@ -134,7 +140,7 @@ export function Explorer({
                 {ranked.length > limit + 1 && (
                   <button
                     onClick={() => setPaging({ key: filterKey, n: limit + PAGE })}
-                    className="pressable mx-auto h-11 rounded-full bg-surface px-5 text-[14px] font-semibold text-ink shadow-card"
+                    className="pressable mx-auto h-9 rounded-[10px] border border-line bg-surface px-4 text-[14px] font-medium text-ink"
                   >
                     Show more
                   </button>
@@ -182,7 +188,7 @@ export function Explorer({
   );
 }
 
-function MarketStrip({
+function MarketPanel({
   pools,
   chains,
   apps,
@@ -197,26 +203,38 @@ function MarketStrip({
   asset: Asset;
   updatedAt: string;
 }) {
-  const items = [
-    { label: "Best grade-A rate", value: formatPct(bestSafe) },
+  const rows = [
+    { label: "Best grade-A rate", value: formatPct(bestSafe), accent: true },
     { label: "Options compared", value: String(pools) },
     { label: "DeFi apps", value: String(apps) },
     { label: "Networks", value: String(chains) },
   ];
   return (
-    <div>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        {items.map((s) => (
-          <div key={s.label} className="rounded-[20px] bg-surface px-4 py-3 shadow-card">
-            <p className="truncate text-[12px] font-medium text-ink-3">{s.label}</p>
-            <p className="mt-0.5 font-display text-[20px] font-extrabold text-ink tabular">{s.value}</p>
+    <aside className="enter rounded-[14px] border border-line bg-surface shadow-card">
+      <div className="flex items-center justify-between border-b border-line px-5 py-3">
+        <p className="label">Market today</p>
+        <p className="label flex items-center gap-1.5 text-ink-2!">
+          {asset}
+        </p>
+      </div>
+      <dl className="px-5 py-1">
+        {rows.map((r, i) => (
+          <div key={r.label} className={`flex items-baseline justify-between py-2.5 ${i ? "border-t border-line" : ""}`}>
+            <dt className="text-[13px] text-ink-3">{r.label}</dt>
+            <dd
+              className={`font-display text-[18px] font-semibold tracking-[-0.01em] tabular ${
+                r.accent ? "text-accent-ink" : "text-ink"
+              }`}
+            >
+              {r.value}
+            </dd>
           </div>
         ))}
-      </div>
-      <p className="mt-2.5 text-center text-[12px] text-ink-3" suppressHydrationWarning>
-        Yearly rates for {asset} from DeFiLlama · updated {timeAgo(updatedAt)}
+      </dl>
+      <p className="border-t border-line px-5 py-2.5 text-[12px] text-ink-3" suppressHydrationWarning>
+        Yearly rates from DeFiLlama · updated {timeAgo(updatedAt)}
       </p>
-    </div>
+    </aside>
   );
 }
 
