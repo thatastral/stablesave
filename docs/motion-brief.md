@@ -147,7 +147,7 @@ A 3D moment isn't required. The 2D halftone and UI carry the film cleanly, and t
 
 **Scene 3. Introducing (330–450)**
 - Pure dark canvas. The halftone bloom drifts to the centre.
-- Geist Mono `INTRODUCING` fades in, then the logo builds: the green rounded square (rx 9) scales 0.96→1. **Three white coins drop in one by one** (bottom, middle, top; 5-frame stagger, `SPRING_UI`) and **settle into a slightly askew stack**: the top and bottom coins rest at −8°, the middle one level, just as in the logo. A tiny overshoot (≤ 2°) as each lands makes the pile feel real: savings, piling up. Logo green is `#00AD61`. Then the wordmark **StableSave** reveals with a clip-path wipe over 18 frames.
+- Geist Mono `INTRODUCING` fades in, then the logo builds: the green rounded square (rx 9) scales 0.96→1. **Three white coins drop in one by one** (bottom, middle, top; 5-frame stagger, `SPRING_UI`) and **settle into a slightly askew stack**: the top and bottom coins rest at −8°, the middle one level, just as in the logo. A tiny overshoot (≤ 2°) as each lands makes the pile feel real: savings, piling up. The final frame of the logo must match `src/app/icon.svg` exactly. Logo green is `#00AD61`. Then the wordmark **StableSave** reveals with a clip-path wipe over 18 frames.
 - Hold for 30 frames, then the logo glides up and shrinks into the header position, becoming the site header (a FLIP move, `SPRING_SOFT`).
 
 ### Act III: The product
