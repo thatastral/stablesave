@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { LOGO_COINS, LOGO_GREEN, LOGO_TILE, LOGO_VIEWBOX } from "@/lib/logo";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import sharp from "sharp";
@@ -334,11 +335,11 @@ function Label({ children, color = INK_3 }: { children: React.ReactNode; color?:
 
 function Mark({ size }: { size: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32">
-      <rect width="32" height="32" rx="8" fill="#00AD61" />
-      <rect x="4.25" y="6.95" width="22.1" height="5" rx="2.5" fill="#FFFFFF" transform="rotate(-8 15.3 9.45)" />
-      <rect x="4.70" y="13.35" width="22.8" height="5" rx="2.5" fill="#FFFFFF" />
-      <rect x="5.80" y="19.80" width="22" height="5" rx="2.5" fill="#FFFFFF" transform="rotate(-8 16.8 22.3)" />
+    <svg width={size} height={size} viewBox={LOGO_VIEWBOX}>
+      <path d={LOGO_TILE} fill={LOGO_GREEN} />
+      {LOGO_COINS.map((d) => (
+        <path key={d} d={d} fill="#fff" />
+      ))}
     </svg>
   );
 }

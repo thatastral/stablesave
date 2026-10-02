@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { LOGO_COINS, LOGO_VIEWBOX } from "@/lib/logo";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
@@ -122,10 +123,10 @@ export function Welcome() {
           >
             <div className="flex items-center gap-3">
               <span className="grid size-11 place-items-center rounded-[14px] bg-accent-soft">
-                <svg width="24" height="24" viewBox="0 0 32 32" aria-hidden>
-                  <rect x="4.25" y="6.95" width="22.1" height="5" rx="2.5" fill="var(--accent)" transform="rotate(-8 15.3 9.45)" />
-                  <rect x="4.70" y="13.35" width="22.8" height="5" rx="2.5" fill="var(--accent)" />
-                  <rect x="5.80" y="19.80" width="22" height="5" rx="2.5" fill="var(--accent)" transform="rotate(-8 16.8 22.3)" />
+                <svg width="24" height="24" viewBox={LOGO_VIEWBOX} aria-hidden>
+                  {LOGO_COINS.map((d) => (
+                    <path key={d} d={d} fill="var(--accent)" />
+                  ))}
                 </svg>
               </span>
               <span className="label">Welcome to StableSave</span>

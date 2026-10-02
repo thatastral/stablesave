@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { LOGO_COINS, LOGO_VIEWBOX } from "@/lib/logo";
 
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
@@ -15,10 +16,10 @@ export default function AppleIcon() {
           background: "#00AD61",
         }}
       >
-        <svg width="180" height="180" viewBox="0 0 32 32">
-          <rect x="4.25" y="6.95" width="22.1" height="5" rx="2.5" fill="#FFFFFF" transform="rotate(-8 15.3 9.45)" />
-          <rect x="4.70" y="13.35" width="22.8" height="5" rx="2.5" fill="#FFFFFF" />
-          <rect x="5.80" y="19.80" width="22" height="5" rx="2.5" fill="#FFFFFF" transform="rotate(-8 16.8 22.3)" />
+        <svg width="180" height="180" viewBox={LOGO_VIEWBOX}>
+          {LOGO_COINS.map((d) => (
+            <path key={d} d={d} fill="#fff" />
+          ))}
         </svg>
       </div>
     ),
