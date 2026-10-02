@@ -12,22 +12,13 @@ export default function AppleIcon() {
           width: "100%",
           height: "100%",
           display: "flex",
-          background: "#0FA968",
+          background: "#00AD61",
         }}
       >
         <svg width="180" height="180" viewBox="0 0 32 32">
-          <g transform="translate(17.6 9.6) rotate(-16)">
-            <rect x="-7.6" y="-1.15" width="15.2" height="4.6" rx="2.3" fill="#BFEBD5" />
-            <rect x="-7.6" y="-2.6" width="15.2" height="4.6" rx="2.3" fill="#FFFFFF" />
-          </g>
-          <g transform="translate(16 16.2) rotate(20)">
-            <rect x="-7.6" y="-1.15" width="15.2" height="4.6" rx="2.3" fill="#9FDDBF" />
-            <rect x="-7.6" y="-2.6" width="15.2" height="4.6" rx="2.3" fill="#D6F7E6" />
-          </g>
-          <g transform="translate(14.4 22.8) rotate(-16)">
-            <rect x="-7.6" y="-1.15" width="15.2" height="4.6" rx="2.3" fill="#BFEBD5" />
-            <rect x="-7.6" y="-2.6" width="15.2" height="4.6" rx="2.3" fill="#FFFFFF" />
-          </g>
+          <rect x="4.25" y="6.95" width="22.1" height="5" rx="2.5" fill="#FFFFFF" transform="rotate(-8 15.3 9.45)" />
+          <rect x="4.70" y="13.35" width="22.8" height="5" rx="2.5" fill="#FFFFFF" />
+          <rect x="5.80" y="19.80" width="22" height="5" rx="2.5" fill="#FFFFFF" transform="rotate(-8 16.8 22.3)" />
         </svg>
       </div>
     ),
