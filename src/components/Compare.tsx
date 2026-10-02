@@ -7,7 +7,6 @@ import { formatPct, formatUsd, hostname } from "@/lib/format";
 import { GRADE_LABEL, projectedEarnings } from "@/lib/scoring";
 import { ArrowUpRight, GradeBadge, ProtocolMark } from "./primitives";
 import { Panel } from "./Panel";
-import { play } from "@/lib/sound";
 
 export const MAX_COMPARE = 3;
 
@@ -39,10 +38,7 @@ export function CompareTray({
               {items.map((o) => o.protocol.name).join(", ")}
             </span>
             <button
-              onClick={() => {
-                play("unpop");
-                onClear();
-              }}
+              onClick={onClear}
               className="pressable h-8 px-2 text-[13px] font-medium text-ink-3 hover:text-ink">
               Clear
             </button>

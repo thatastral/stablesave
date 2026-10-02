@@ -3,7 +3,6 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
-import { play } from "@/lib/sound";
 
 const SEEN_KEY = "stablesave:welcome-v1";
 const OPEN_EVENT = "stablesave:welcome";
@@ -71,10 +70,7 @@ export function Welcome() {
   useEffect(() => {
     // Wait for the page to settle so the dialog lands over real content.
     const t = setTimeout(() => !readSeen() && setOpen(true), 500);
-    const onOpen = () => {
-      play("open");
-      setOpen(true);
-    };
+    const onOpen = () => setOpen(true);
     window.addEventListener(OPEN_EVENT, onOpen);
     return () => {
       clearTimeout(t);
@@ -98,7 +94,6 @@ export function Welcome() {
   }, [open]);
 
   function close() {
-    play("close");
     setOpen(false);
     markSeen();
   }

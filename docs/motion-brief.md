@@ -115,10 +115,10 @@ The same five-act story, compressed. The same rules, look and sounds apply. This
 | Frames | Act | Picture | Voiceover | Key sound |
 | --- | --- | --- | --- | --- |
 | 0–90 | I. Problem | `YOUR USDC` / `$10,000` / `earning $0.00`, and the "z z" drifts up | "Your stablecoins are sleeping." (starts 8) | soft ticks per word, airy z-z |
-| 90–180 | I. Problem | 6 jargon pills pop in fast (2-frame stagger), then clear with a breath at 165 | "Earning on them shouldn't be homework." (starts 95) | muted taps, long whoosh at 165 |
+| 90–180 | I. Problem | 6 jargon pills pop in fast (2-frame stagger), then clear with a breath at 165 | "Earning on them shouldn't be homework." (starts 95) | muted taps, long swell at 165 |
 | 180–270 | II. Turn | silence beat (180–192), then logo build: square, three coins rise, wordmark wipe | "Meet StableSave." (starts 200) | sub thump at 192, three rising notes, music chord |
 | 270–540 | III. Product | the widget rises (270–300). Type `10000` (keys at 305, 313, 320, 328, 335). **+$512 lands at 335**. Push-in to 1.12 (350–400). `A Safer` pops at 400. Tap Go bigger (450) → C pick, then Play it safe (495) → back to A | "Type what you have… see what it could earn, and how safe it is." (starts 300) | rising ticks, **chime + swell at 335**, pop, taps and chimes |
-| 540–690 | III. Product | glide to the list: 6 rows stagger in (540–580), tap Maple (600), the side panel slides in, the safety ring fills to 87 (620–680) | "Every option. One clear safety grade." (starts 555) | tick patter, open whoosh, rising tone |
+| 540–690 | III. Product | glide to the list: 6 rows stagger in (540–580), tap Maple (600), the side panel slides in, the safety ring fills to 87 (620–680) | "Every option. One clear safety grade." (starts 555) | tick patter, open swell, rising tone |
 | 690–780 | IV. Promise | CTA "Go to this pool on app.maple.finance ↗" is pressed at 705, then the shield line appears | "You deposit on the official app. We never touch your money." (starts 690) | firm tap + confirm notes |
 | 780–900 | V. Resolution | end card: logo, "Find where your stablecoins earn the most.", URL. Still for the last 30 frames | "StableSave." (starts 790) | final resolved chord, tail |
 
@@ -222,19 +222,21 @@ Sound is half the film. Three layers, mixed so the voice always wins.
 - **Source:** licensed royalty-free (Artlist, Musicbed, or Epidemic, supplied by the founder as `video/public/audio/music.wav`), or generated with an AI music tool using the description above. Cut it on the beat to scene boundaries.
 
 ### 8.3 UI sound effects (cue sheet for the 30-second extended cut; the 15-second cut uses the key sounds in section 6A, same recipes)
-Build these **procedurally** so they are licence-free and match the live site's sounds (`src/lib/sound.ts`): a small Node script synthesises each as a 48 kHz WAV into `video/public/audio/sfx/`, using the same recipes (sine or triangle tones with exponential decay, and band-passed noise for whooshes), then layers them with `<Audio>` at the frames below.
+Build these **procedurally** so they are licence-free and match the live site's sounds (`src/lib/sound.ts`): a small Node script synthesises each as a 48 kHz WAV into `video/public/audio/sfx/`, using the same recipes (pure sine tones with soft attacks and long exponential tails, through a gentle 2.6 kHz low-pass), then layers them with `<Audio>` at the frames below.
+
+**Character: calm, soft and warm.** There are no noise-based swelles or raspy textures. A "swell" in this sheet means a slow-attack pair of low sine tones (as in the site's panel-open sound), optionally with a whisper of low-passed air at −40 dB.
 
 | Frame(s) | Event | Sound |
 | --- | --- | --- |
 | 80–140 | Headline words land | `tick` per word, very soft, rising pitch 1900 → 2300 Hz |
 | 120–150 | "z z" drifts | two tiny airy `tick`s, high-passed, panned slightly right |
 | 160–290 | Each jargon tag floats in | muted `tap`s (−26 dB), random pitch ±5%, panned to each tag's x position |
-| 300 | Noise clears | long `close` whoosh (0.8 s, 2400 → 300 Hz) with a reverse-cymbal swell |
+| 300 | Noise clears | long `close` swell (0.8 s, 2400 → 300 Hz) with a reverse-cymbal swell |
 | 330–360 | Silence | ~0.5 s of true silence (no music) before the reveal |
 | 360 | "Introducing" | soft sub thump (60 Hz, 120 ms) + music chord |
 | 372, 377, 382 | Logo coins rise | three ascending `select` notes (C6, E6, G6) |
-| 400 | Wordmark wipe | soft `open` whoosh |
-| 470–540 | Widget assembles | `open` whoosh, then a `tap` as each panel settles |
+| 400 | Wordmark wipe | soft `open` swell |
+| 470–540 | Widget assembles | `open` swell, then a `tap` as each panel settles |
 | 615 | Cursor clicks amount | `tap` |
 | 630, 642, 652, 664, 674 | Keystrokes | `tick` each, +1 semitone per keystroke |
 | 630–674 | Earnings spring | quiet rising shimmer under the number (sine sweep 400 → 900 Hz, −30 dB) |
@@ -242,17 +244,17 @@ Build these **procedurally** so they are licence-free and match the live site's 
 | 790 | "A Safer" chip pops | `pop` |
 | 930 | Tap Go bigger | `tap`, then `chime` lower and slightly detuned (riskier) |
 | 1010 | Tap Play it safe | `tap`, then clean `chime` |
-| 1080–1150 | Camera glides to list | long soft whoosh with motion blur |
+| 1080–1150 | Camera glides to list | long soft swell with motion blur |
 | 1150–1200 | Rows stagger in | soft `tick` patter (8 ticks, 3 frames apart, falling pitch) |
 | 1230 | Sort reorders | quick `tap` + a "shuffle" of 4 tiny ticks |
-| 1340 | Tap Maple row | `tap` + `open` whoosh as the panel slides in |
+| 1340 | Tap Maple row | `tap` + `open` swell as the panel slides in |
 | 1370–1418 | Chart draws | rising filtered pad (400 → 1600 Hz) ending in a tiny `pop` on the end dot |
 | 1430–1480 | Safety ring fills to 87 | gentle rising tone with 5 soft `tick`s as factor bars fill |
 | 1600 | CTA press | firm `tap` (lower, 300 Hz) + soft "confirm" two-note `select` |
 | 1690–1720 | End-card logo build | three ascending notes (as in Scene 3, softer) + final resolved chord |
 | 1760–1800 | Hold | only music tail and room tone |
 
-**SFX rules:** nothing harsh, nothing sharper than a soft tick, no "cash register" or coin-clink clichés. Pan gently to where the element sits on screen (±20%). Keep pitches in key (D major or neutral).
+**SFX rules:** nothing harsh, nothing sharper than a soft tick, no "cash register" or coin-clink clichés. Less is more: if a beat already has VO, its sound effect sits 3 dB lower or is dropped. Pan gently to where the element sits on screen (±20%). Keep pitches in key (D major or neutral).
 
 ### 8.4 Voiceover
 

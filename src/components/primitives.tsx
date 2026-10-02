@@ -152,12 +152,15 @@ export function Segmented<T extends string>({
   onChange,
   size = "md",
   label,
+  sound = false,
 }: {
   options: { key: T; label: React.ReactNode }[];
   value: T;
   onChange: (v: T) => void;
   size?: "sm" | "md";
   label: string;
+  /** Only meaningful choices (like risk comfort) get a sound. */
+  sound?: boolean;
 }) {
   const id = useId();
   const h = size === "sm" ? "h-7 text-[13px]" : "h-9 text-[14px]";
@@ -175,7 +178,7 @@ export function Segmented<T extends string>({
             role="radio"
             aria-checked={active}
             onClick={() => {
-              if (!active) play("tap");
+              if (!active && sound) play("tap");
               onChange(o.key);
             }}
             className={`relative flex items-center gap-1.5 rounded-full px-2.5 font-display font-medium whitespace-nowrap transition-colors duration-150 sm:px-3.5 ${h} ${

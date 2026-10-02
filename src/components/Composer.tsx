@@ -107,10 +107,7 @@ export function Composer({
             {PRESETS.map((p) => (
               <button
                 key={p}
-                onClick={() => {
-                  play("tap");
-                  onAmount(p);
-                }}
+                onClick={() => onAmount(p)}
                 aria-pressed={amount === p}
                 className={`pressable h-7 rounded-full px-3 font-display text-[12px] font-medium tabular transition-colors duration-150 ${
                   amount === p ? "bg-ink text-canvas" : "bg-surface text-ink-2 shadow-card hover:text-ink"
@@ -198,6 +195,7 @@ export function Composer({
           <div className="mt-2.5 [&>div]:flex [&>div]:w-full [&>div>button]:flex-1 [&>div>button]:justify-center">
             <Segmented<Appetite>
               label="Risk comfort"
+              sound
               value={appetite}
               onChange={onAppetite}
               options={APPETITES.map((a) => ({ key: a.key, label: a.label }))}
@@ -264,10 +262,7 @@ function TokenSelect({ asset, onChange }: { asset: Asset; onChange: (a: Asset) =
   return (
     <div ref={ref} className="relative shrink-0">
       <button
-        onClick={() => {
-          play("tap");
-          setOpen((o) => !o);
-        }}
+        onClick={() => setOpen((o) => !o)}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`Stablecoin: ${asset}`}

@@ -2,7 +2,6 @@
 
 import type { SortKey } from "@/lib/types";
 import { ChainIcon, Segmented } from "./primitives";
-import { play } from "@/lib/sound";
 
 const SORTS: { key: SortKey; label: string }[] = [
   { key: "match", label: "Best for you" },
@@ -66,10 +65,7 @@ function ChainChip({
 }) {
   return (
     <button
-      onClick={() => {
-        play("tap");
-        onClick();
-      }}
+      onClick={onClick}
       aria-pressed={active}
       className={`pressable flex h-9 shrink-0 items-center gap-1.5 rounded-full pr-3.5 pl-2 font-display text-[13px] font-medium whitespace-nowrap first:pl-3.5 ${
         active ? "bg-ink text-canvas" : "bg-surface text-ink-2 shadow-card hover:text-ink"

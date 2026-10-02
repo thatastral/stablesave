@@ -63,7 +63,7 @@ export function OpportunityList({
                 </button>
                 <button
                   onClick={() => {
-                    play(inCompare ? "unpop" : "pop");
+                    if (!inCompare) play("pop");
                     onToggleCompare(o.id);
                   }}
                   aria-pressed={inCompare}

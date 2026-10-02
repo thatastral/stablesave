@@ -23,7 +23,8 @@ export function Panel({
   const desktop = useMinWidth(768);
   const wasOpen = useRef(open);
   useEffect(() => {
-    if (open !== wasOpen.current) play(open ? "open" : "close");
+    // Only the arrival gets a sound; closing is silent.
+    if (open && !wasOpen.current) play("open");
     wasOpen.current = open;
   }, [open]);
   return (
