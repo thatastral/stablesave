@@ -212,7 +212,7 @@ Sound is half the film. Three layers, mixed so the voice always wins.
 | Layer | Role | Level |
 | --- | --- | --- |
 | **Voiceover** | The story | −16 LUFS short-term; everything ducks under it |
-| **UI sound effects** | Make the product feel touchable | −24 to −20 dB |
+| **UI sound effects** | Make the product feel touchable | −32 to −26 dB. Felt more than heard |
 | **Music bed** | Emotion and pacing | −26 dB under VO, −18 dB in gaps (auto-duck 6 dB, 120 ms attack, 400 ms release) |
 | **Atmosphere** | Air and space | a very low room tone or soft tape hiss at −40 dB so silence never feels dead |
 
@@ -222,9 +222,9 @@ Sound is half the film. Three layers, mixed so the voice always wins.
 - **Source:** licensed royalty-free (Artlist, Musicbed, or Epidemic, supplied by the founder as `video/public/audio/music.wav`), or generated with an AI music tool using the description above. Cut it on the beat to scene boundaries.
 
 ### 8.3 UI sound effects (cue sheet for the 30-second extended cut; the 15-second cut uses the key sounds in section 6A, same recipes)
-Build these **procedurally** so they are licence-free and match the live site's sounds (`src/lib/sound.ts`): a small Node script synthesises each as a 48 kHz WAV into `video/public/audio/sfx/`, using the same recipes (pure sine tones with soft attacks and long exponential tails, through a gentle 2.6 kHz low-pass), then layers them with `<Audio>` at the frames below.
+Build these **procedurally** so they are licence-free and match the live site's sounds (`src/lib/sound.ts`): a small Node script synthesises each as a 48 kHz WAV into `video/public/audio/sfx/`, using the same recipes (pure sine tones with soft 20–120 ms attacks and long exponential tails, through a gentle 2.6 kHz low-pass; peak levels about −36 dBFS before mixing), then layers them with `<Audio>` at the frames below.
 
-**Character: calm, soft and warm.** There are no noise-based swelles or raspy textures. A "swell" in this sheet means a slow-attack pair of low sine tones (as in the site's panel-open sound), optionally with a whisper of low-passed air at −40 dB.
+**Character: calm, soft, chilled and delightful, never alarming.** There are no noise-based swells, raspy textures, bright clicks or sharp attacks. A "swell" in this sheet means a slow-attack pair of low sine tones (as in the site's panel-open sound), optionally with a whisper of low-passed air at −40 dB.
 
 | Frame(s) | Event | Sound |
 | --- | --- | --- |
@@ -238,15 +238,15 @@ Build these **procedurally** so they are licence-free and match the live site's 
 | 400 | Wordmark wipe | soft `open` swell |
 | 470–540 | Widget assembles | `open` swell, then a `tap` as each panel settles |
 | 615 | Cursor clicks amount | `tap` |
-| 630, 642, 652, 664, 674 | Keystrokes | `tick` each, +1 semitone per keystroke |
+| 630, 642, 652, 664, 674 | Keystrokes | very soft `tick` each (1.1 kHz, 50 ms), +1 semitone per keystroke |
 | 630–674 | Earnings spring | quiet rising shimmer under the number (sine sweep 400 → 900 Hz, −30 dB) |
-| **674** | **+$512 lands** | **`chime` (C6 + G6) + a low warm swell + music lifts.** This is the emotional peak |
+| **674** | **+$512 lands** | **soft `chime` (E5 + B5, 60 ms attack, about 1 s tail) + a low warm swell + music lifts.** This is the emotional peak, the only cue allowed to sit slightly forward (−24 dB) |
 | 790 | "A Safer" chip pops | `pop` |
-| 930 | Tap Go bigger | `tap`, then `chime` lower and slightly detuned (riskier) |
-| 1010 | Tap Play it safe | `tap`, then clean `chime` |
+| 930 | Tap Go bigger | one soft rounded pluck (D5, 25 ms attack), then a gentle lower `chime`. Calm, never a warning sound |
+| 1010 | Tap Play it safe | one soft pluck, then the soft `chime` |
 | 1080–1150 | Camera glides to list | long soft swell with motion blur |
-| 1150–1200 | Rows stagger in | soft `tick` patter (8 ticks, 3 frames apart, falling pitch) |
-| 1230 | Sort reorders | quick `tap` + a "shuffle" of 4 tiny ticks |
+| 1150–1200 | Rows stagger in | no per-row sound. One faint airy swell under the glide |
+| 1230 | Sort reorders | **silent** (sorting is housekeeping, as on the site). Only the rows' motion carries it |
 | 1340 | Tap Maple row | `tap` + `open` swell as the panel slides in |
 | 1370–1418 | Chart draws | rising filtered pad (400 → 1600 Hz) ending in a tiny `pop` on the end dot |
 | 1430–1480 | Safety ring fills to 87 | gentle rising tone with 5 soft `tick`s as factor bars fill |
@@ -254,7 +254,7 @@ Build these **procedurally** so they are licence-free and match the live site's 
 | 1690–1720 | End-card logo build | three ascending notes (as in Scene 3, softer) + final resolved chord |
 | 1760–1800 | Hold | only music tail and room tone |
 
-**SFX rules:** nothing harsh, nothing sharper than a soft tick, no "cash register" or coin-clink clichés. Less is more: if a beat already has VO, its sound effect sits 3 dB lower or is dropped. Pan gently to where the element sits on screen (±20%). Keep pitches in key (D major or neutral).
+**SFX rules:** mirror the live site, where sound exists only for moments that matter (typing an amount, changing risk, choosing a coin, the answer changing, adding to compare, opening a pool). Network, sort, filter and theme changes are silent, and so are their equivalents in the film. Nothing harsh, nothing sharper than a soft tick, no "cash register" or coin-clink clichés. Less is more: if a beat already has VO, its sound effect sits 3 dB lower or is dropped. Pan gently to where the element sits on screen (±20%). Keep pitches in key (D major or neutral).
 
 ### 8.4 Voiceover
 
