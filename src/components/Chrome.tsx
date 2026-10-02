@@ -6,10 +6,10 @@ import { ThemeToggle } from "./ThemeToggle";
 export function LogoMark({ size = 26 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden>
-      <rect width="32" height="32" rx="8" fill="#0FA968" />
-      <rect x="6.5" y="19.5" width="12" height="5" rx="1.5" fill="#fff" fillOpacity=".55" />
-      <rect x="10" y="13.5" width="12" height="5" rx="1.5" fill="#fff" fillOpacity=".78" />
-      <rect x="13.5" y="7.5" width="12" height="5" rx="1.5" fill="#fff" />
+      <rect width="32" height="32" rx="9" fill="#0FA968" />
+      <rect x="6.5" y="19.5" width="12" height="5" rx="2.5" fill="#fff" fillOpacity=".55" />
+      <rect x="10" y="13.5" width="12" height="5" rx="2.5" fill="#fff" fillOpacity=".78" />
+      <rect x="13.5" y="7.5" width="12" height="5" rx="2.5" fill="#fff" />
     </svg>
   );
 }
@@ -18,14 +18,14 @@ export function Logo() {
   return (
     <Link href="/" className="pressable flex items-center gap-2" aria-label="StableSave home">
       <LogoMark />
-      <span className="font-display text-[17px] font-semibold tracking-[-0.03em] text-ink">StableSave</span>
+      <span className="font-display text-[18px] font-semibold tracking-[-0.02em] text-ink">StableSave</span>
     </Link>
   );
 }
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-20 border-b border-line bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] backdrop-blur-md">
+    <header className="sticky top-0 z-20 bg-[color-mix(in_srgb,var(--canvas)_55%,transparent)] backdrop-blur-xl">
       <div className="mx-auto flex h-14 w-full max-w-[1080px] items-center justify-between px-4 sm:px-6">
         <Logo />
         <nav className="flex items-center gap-2 text-[13px] font-medium">
@@ -42,7 +42,7 @@ export function Header() {
 
 export function Footer() {
   return (
-    <footer className="mt-auto border-t border-line">
+    <footer className="mt-auto">
       <div className="mx-auto flex w-full max-w-[1080px] flex-col gap-3 px-4 pt-8 pb-4 text-[12px] leading-relaxed text-ink-3 sm:flex-row sm:justify-between sm:px-6">
         <p className="max-w-[540px]">
           StableSave helps you compare options. It isn’t financial advice. We never hold your money or ask for your wallet.

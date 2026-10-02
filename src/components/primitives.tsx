@@ -110,12 +110,12 @@ export function GradeBadge({ grade, withLabel = false }: { grade: Grade; withLab
   const s = GRADE_STYLE[grade];
   return (
     <span
-      className="inline-flex h-6 items-center gap-1.5 rounded-[6px] pr-2 pl-[3px] text-[12px] font-medium"
+      className="inline-flex h-6 items-center gap-1.5 rounded-full pr-2.5 pl-[3px] text-[12px] font-medium"
       style={{ background: s.bg, color: s.fg }}
       title={GRADE_LABEL[grade]}
     >
       <span
-        className="grid size-[18px] place-items-center rounded-[4px] font-mono text-[11px] font-medium text-white"
+        className="grid size-[18px] place-items-center rounded-full font-display text-[11px] font-semibold text-white"
         style={{ background: s.fg }}
       >
         {grade}
@@ -164,7 +164,7 @@ export function Segmented<T extends string>({
     <div
       role="radiogroup"
       aria-label={label}
-      className="inline-flex rounded-[10px] border border-line bg-surface-2 p-[3px]"
+      className="inline-flex rounded-full bg-surface-2 p-1"
     >
       {options.map((o) => {
         const active = o.key === value;
@@ -174,7 +174,7 @@ export function Segmented<T extends string>({
             role="radio"
             aria-checked={active}
             onClick={() => onChange(o.key)}
-            className={`relative flex items-center gap-1.5 rounded-[7px] px-3 font-medium transition-colors duration-150 ${h} ${
+            className={`relative flex items-center gap-1.5 rounded-full px-2.5 font-display font-medium whitespace-nowrap transition-colors duration-150 sm:px-3.5 ${h} ${
               active ? "text-ink" : "text-ink-3 hover:text-ink-2"
             }`}
           >
@@ -182,7 +182,7 @@ export function Segmented<T extends string>({
               <motion.span
                 layoutId={`seg-${id}`}
                 transition={spring}
-                className="absolute inset-0 rounded-[7px] border border-line bg-surface shadow-[0_1px_1px_rgba(0,0,0,0.04)]"
+                className="absolute inset-0 rounded-full bg-surface shadow-card"
               />
             )}
             <span className="relative flex items-center gap-1.5">{o.label}</span>

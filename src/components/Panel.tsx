@@ -22,21 +22,21 @@ export function Panel({
   return (
     <Drawer.Root open={open} onOpenChange={onOpenChange} direction={desktop ? "right" : "bottom"}>
       <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 z-40 bg-black/20" />
+        <Drawer.Overlay className="fixed inset-0 z-40 bg-black/25 backdrop-blur-[2px]" />
         <Drawer.Content
           aria-describedby={undefined}
           style={desktop ? { width } : undefined}
           className={
             desktop
-              ? "fixed top-2 right-2 bottom-2 z-50 flex max-w-[calc(100vw-16px)] flex-col rounded-[14px] border border-line bg-surface shadow-float outline-none after:hidden"
-              : "fixed inset-x-0 bottom-0 z-50 flex max-h-[94dvh] flex-col rounded-t-[18px] border-t border-line bg-surface outline-none"
+              ? "fixed top-3 right-3 bottom-3 z-50 flex max-w-[calc(100vw-24px)] flex-col rounded-[28px] bg-surface shadow-float outline-none after:hidden"
+              : "fixed inset-x-0 bottom-0 z-50 flex max-h-[94dvh] flex-col rounded-t-[28px] bg-surface outline-none"
           }
         >
           {desktop ? (
             <button
               onClick={() => onOpenChange(false)}
               aria-label="Close"
-              className="pressable absolute top-3 right-3 z-10 grid size-8 place-items-center rounded-[8px] border border-line bg-surface text-ink-3 hover:text-ink"
+              className="pressable absolute top-4 right-4 z-10 grid size-9 place-items-center rounded-full bg-surface-2 text-ink-3 hover:text-ink"
             >
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
                 <path d="m4 4 8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />

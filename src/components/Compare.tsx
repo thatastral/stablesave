@@ -30,8 +30,8 @@ export function CompareTray({
           transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
           className="fixed inset-x-0 bottom-[max(env(safe-area-inset-bottom),16px)] z-30 flex justify-center px-4"
         >
-          <div className="flex w-full max-w-[520px] items-center gap-3 rounded-[12px] border border-line bg-surface p-2 pl-3 shadow-float">
-            <span className="grid h-6 min-w-6 place-items-center rounded-[6px] bg-ink px-1.5 font-mono text-[12px] text-canvas tabular">
+          <div className="flex w-full max-w-[520px] items-center gap-3 rounded-full bg-surface p-2 pl-2.5 shadow-float">
+            <span className="grid h-8 min-w-8 place-items-center rounded-full bg-ink px-2 font-display text-[13px] font-semibold text-canvas tabular">
               {items.length}
             </span>
             <span className="min-w-0 flex-1 truncate text-[13px] text-ink-2">
@@ -43,7 +43,7 @@ export function CompareTray({
             <button
               onClick={onOpen}
               disabled={items.length < 2}
-              className="pressable h-8 shrink-0 rounded-[8px] bg-ink px-3 text-[13px] font-medium text-canvas disabled:opacity-40"
+              className="pressable h-9 shrink-0 rounded-full bg-ink px-4 font-display text-[13px] font-medium text-canvas disabled:opacity-40"
             >
               {items.length < 2 ? "Pick one more" : `Compare ${items.length}`}
             </button>
@@ -101,7 +101,7 @@ export function CompareSheet({
                     <th className="w-[112px]" />
                     {items.map((o) => (
                       <th key={o.id} className="px-1.5 pb-4 text-left align-top font-normal">
-                        <div className="flex flex-col gap-2 rounded-[10px] border border-line p-3">
+                        <div className="flex flex-col gap-2 rounded-[20px] bg-surface-2 p-3">
                           <div className="flex items-center justify-between">
                             <ProtocolMark logo={o.protocol.logo} name={o.protocol.name} chain={o.chain} size={36} />
                             <button
@@ -122,11 +122,11 @@ export function CompareSheet({
                 <tbody>
                   {rows.map((r) => (
                     <tr key={r.label}>
-                      <td className="border-t border-line py-3 pr-2 text-ink-3">{r.label}</td>
+                      <td className="border-t border-[var(--hairline)] py-3 pr-2 text-ink-3">{r.label}</td>
                       {items.map((o) => {
                         const win = r.win?.(o);
                         return (
-                          <td key={o.id} className="border-t border-line px-1.5 py-3">
+                          <td key={o.id} className="border-t border-[var(--hairline)] px-1.5 py-3">
                             <span
                               className={`tabular inline-flex rounded-[6px] px-1.5 py-0.5 font-medium ${
                                 win ? "bg-accent-soft text-accent-ink" : "text-ink"

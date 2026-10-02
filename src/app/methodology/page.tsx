@@ -59,7 +59,7 @@ export default function Methodology() {
 
         <section className="mt-10 overflow-hidden rounded-[14px] bg-surface shadow-card">
           {FACTORS.map((f, i) => (
-            <div key={f.key} className={`flex gap-4 p-5 ${i ? "border-t border-line" : ""}`}>
+            <div key={f.key} className={`flex gap-4 p-5 ${i ? "border-t border-[var(--hairline)]" : ""}`}>
               <div className="grid size-12 shrink-0 place-items-center rounded-full bg-accent-soft font-display text-[15px] font-semibold text-accent-ink tabular">
                 {Math.round(WEIGHTS[f.key] * 100)}%
               </div>

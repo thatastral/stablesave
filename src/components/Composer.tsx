@@ -6,7 +6,6 @@ import type { Appetite, Asset, ScoredOpportunity } from "@/lib/types";
 import { formatPct, formatUsd } from "@/lib/format";
 import { APPETITES, GRADE_LABEL, projectedEarnings } from "@/lib/scoring";
 import { AnimatedNumber, Chevron, ProtocolMark, Segmented, TokenIcon, gradeColor } from "./primitives";
-import { Term } from "./Term";
 
 const PRESETS = [100, 1_000, 10_000, 50_000];
 const MAX = 1_000_000_000;
@@ -54,29 +53,26 @@ export function Composer({
 
       <h1
         style={{ animationDelay: "60ms" }}
-        className="enter mt-4 font-display text-[36px] leading-[1.04] font-semibold tracking-[-0.035em] text-balance text-ink sm:text-[48px]"
+        className="enter mt-4 font-display text-[36px] leading-[1.05] font-semibold tracking-[-0.03em] text-balance text-ink sm:text-[50px]"
       >
         How much do you want to grow?
       </h1>
 
       <div
         style={{ animationDelay: "120ms" }}
-        className="enter mt-8 w-full rounded-[22px] border border-line bg-surface p-2 text-left shadow-[0_1px_2px_rgba(17,17,17,0.04),0_24px_48px_-28px_rgba(17,17,17,0.22)]"
+        className="enter mt-9 w-full rounded-[30px] bg-surface p-2.5 text-left shadow-soft"
       >
         {/* You have */}
-        <div className="rounded-[16px] bg-surface-2 px-4 pt-3.5 pb-4 transition-shadow duration-200 focus-within:shadow-[inset_0_0_0_1.5px_var(--accent)]">
+        <div className="rounded-[22px] bg-surface-2 px-5 pt-4 pb-4 transition-shadow duration-200 focus-within:shadow-[inset_0_0_0_2px_color-mix(in_srgb,var(--accent)_45%,transparent)]">
           <div className="flex items-center justify-between">
             <label htmlFor="amount" className="text-[13px] font-medium text-ink-3">
               You have
             </label>
-            <span className="text-[12px] text-ink-3">
-              A <Term k="stablecoin">stablecoin</Term> worth $1 each
-            </span>
           </div>
           <div className="mt-1.5 flex items-center justify-between gap-3">
             <label
               htmlFor="amount"
-              className="flex min-w-0 flex-1 cursor-text items-baseline overflow-hidden font-display leading-none font-semibold tracking-[-0.045em] text-ink"
+              className="flex min-w-0 flex-1 cursor-text items-baseline overflow-hidden font-display leading-none font-semibold tracking-[-0.03em] text-ink"
               style={{ fontSize: "clamp(40px, 11vw, 54px)" }}
             >
               <span aria-hidden className={`mr-[0.03em] text-[0.62em] ${amount ? "text-ink-2" : "text-ink-3"}`}>
@@ -104,10 +100,8 @@ export function Composer({
                 key={p}
                 onClick={() => onAmount(p)}
                 aria-pressed={amount === p}
-                className={`pressable h-7 rounded-[8px] px-2.5 text-[12px] font-medium tabular transition-colors duration-150 ${
-                  amount === p
-                    ? "bg-ink text-canvas"
-                    : "bg-surface text-ink-2 shadow-[inset_0_0_0_1px_var(--line)] hover:text-ink"
+                className={`pressable h-7 rounded-full px-3 font-display text-[12px] font-medium tabular transition-colors duration-150 ${
+                  amount === p ? "bg-ink text-canvas" : "bg-surface text-ink-2 shadow-card hover:text-ink"
                 }`}
               >
                 ${p >= 1000 ? `${p / 1000}k` : p}
@@ -117,13 +111,13 @@ export function Composer({
         </div>
 
         {/* Seam between the two panels, like a swap widget. */}
-        <div className="relative z-10 -my-[11px] flex justify-center" aria-hidden>
+        <div className="relative z-10 -my-[13px] flex justify-center" aria-hidden>
           <motion.span
             key={asset}
             initial={{ rotate: -90, scale: 0.9 }}
             animate={{ rotate: 0, scale: 1 }}
             transition={{ type: "spring", duration: 0.5, bounce: 0.25 }}
-            className="grid size-[30px] place-items-center rounded-[10px] border-[3px] border-surface bg-surface-2 text-ink-2"
+            className="grid size-[34px] place-items-center rounded-full border-[4px] border-surface bg-surface-2 text-ink-2"
           >
             <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
               <path
@@ -141,15 +135,14 @@ export function Composer({
         <button
           onClick={onOpenTop}
           disabled={!top}
-          className="group w-full rounded-[16px] bg-surface-2 px-4 pt-3.5 pb-4 text-left transition-colors duration-150 hover:bg-sunken disabled:cursor-default"
+          className="group w-full rounded-[22px] bg-[color-mix(in_srgb,var(--accent-soft)_55%,var(--surface-2))] px-5 pt-4 pb-4 text-left transition-colors duration-200 hover:bg-accent-soft disabled:cursor-default"
         >
           <div className="flex items-center justify-between">
             <span className="text-[13px] font-medium text-ink-3">You could earn in a year</span>
-            <span className="text-[12px] text-ink-3">Top pick for you</span>
           </div>
           <div className="mt-1.5 flex items-center justify-between gap-3">
             <p
-              className="min-w-0 truncate font-display leading-none font-semibold tracking-[-0.045em] text-accent-ink"
+              className="min-w-0 truncate font-display leading-none font-semibold tracking-[-0.03em] text-accent-ink"
               style={{ fontSize: "clamp(40px, 11vw, 54px)" }}
             >
               {top ? (
@@ -168,7 +161,7 @@ export function Composer({
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   exit={{ opacity: 0, y: -6, filter: "blur(4px)" }}
                   transition={{ duration: 0.28, ease: EASE }}
-                  className="flex h-9 shrink-0 items-center gap-2 rounded-[12px] bg-surface pr-2.5 pl-1.5 shadow-[inset_0_0_0_1px_var(--line)]"
+                  className="flex h-10 shrink-0 items-center gap-2 rounded-full bg-surface pr-3 pl-1.5 shadow-card"
                 >
                   <ProtocolMark logo={top.protocol.logo} name={top.protocol.name} chain={top.chain} size={24} />
                   <span className="max-w-[120px] truncate text-[14px] font-semibold text-ink">{top.protocol.name}</span>
@@ -178,23 +171,17 @@ export function Composer({
             </AnimatePresence>
           </div>
           {top && (
-            <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-ink-3">
+            <p className="mt-3 flex items-center gap-2 text-[13px] text-ink-3">
               <span>
-                <span className="font-semibold text-ink tabular">{formatPct(top.apy)}</span> yearly rate
+                at <span className="font-semibold text-ink tabular">{formatPct(top.apy)}</span> a year
               </span>
-              <span className="flex items-center gap-2">
-                <span aria-hidden>·</span>
-                <GradeInline grade={top.grade} />
-              </span>
-              <span>
-                <span aria-hidden className="mr-2">·</span>≈ <AnimatedNumber value={yearly / 12} format={(n) => formatUsd(n)} className="text-ink-2" /> a month
-              </span>
+              <GradeInline grade={top.grade} />
             </p>
           )}
         </button>
 
         {/* Risk */}
-        <div className="px-2 pt-4 pb-2">
+        <div className="px-3 pt-5 pb-2.5">
           <span className="text-[13px] font-medium text-ink-2">How much risk are you okay with?</span>
           <div className="mt-2.5 [&>div]:flex [&>div]:w-full [&>div>button]:flex-1 [&>div>button]:justify-center">
             <Segmented<Appetite>
@@ -234,10 +221,10 @@ function GradeInline({ grade }: { grade: ScoredOpportunity["grade"] }) {
   const { fg, bg } = gradeColor(grade);
   return (
     <span
-      className="inline-flex h-5 items-center gap-1 rounded-[6px] pr-1.5 pl-[2px] text-[12px] font-medium"
+      className="inline-flex h-[22px] items-center gap-1 rounded-full pr-2 pl-[3px] text-[12px] font-medium"
       style={{ background: bg, color: fg }}
     >
-      <span className="grid size-4 place-items-center rounded-[4px] font-mono text-[10px] text-white" style={{ background: fg }}>
+      <span className="grid size-4 place-items-center rounded-full font-display text-[10px] font-semibold text-white" style={{ background: fg }}>
         {grade}
       </span>
       {GRADE_LABEL[grade]}
@@ -269,7 +256,7 @@ function TokenSelect({ asset, onChange }: { asset: Asset; onChange: (a: Asset) =
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`Stablecoin: ${asset}`}
-        className="pressable flex h-9 items-center gap-1.5 rounded-[12px] bg-surface pr-2 pl-1.5 text-[14px] font-semibold text-ink shadow-[inset_0_0_0_1px_var(--line),0_1px_2px_rgba(17,17,17,0.05)]"
+        className="pressable flex h-10 items-center gap-1.5 rounded-full bg-surface pr-2.5 pl-1.5 font-display text-[15px] font-medium text-ink shadow-card"
       >
         <TokenIcon asset={asset} size={22} />
         {asset}
@@ -289,7 +276,7 @@ function TokenSelect({ asset, onChange }: { asset: Asset; onChange: (a: Asset) =
             exit={{ opacity: 0, scale: 0.98, transition: { duration: 0.1 } }}
             transition={{ duration: 0.16, ease: EASE }}
             style={{ transformOrigin: "top right" }}
-            className="absolute top-full right-0 z-30 mt-1.5 w-[210px] rounded-[14px] border border-line bg-surface p-1 shadow-float"
+            className="absolute top-full right-0 z-30 mt-2 w-[220px] rounded-[20px] bg-surface p-1.5 shadow-float"
           >
             {(["USDC", "USDT"] as const).map((a) => (
               <li key={a}>
@@ -300,7 +287,7 @@ function TokenSelect({ asset, onChange }: { asset: Asset; onChange: (a: Asset) =
                     onChange(a);
                     setOpen(false);
                   }}
-                  className="flex w-full items-center gap-2.5 rounded-[10px] px-2.5 py-2 text-left transition-colors hover:bg-surface-2"
+                  className="flex w-full items-center gap-2.5 rounded-[14px] px-2.5 py-2 text-left transition-colors hover:bg-surface-2"
                 >
                   <TokenIcon asset={a} size={26} />
                   <span className="flex-1">

@@ -29,9 +29,9 @@ export function Filters({
 }) {
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-[14px] font-semibold text-ink">
-          All options <span className="ml-1 font-mono text-[12px] font-normal text-ink-3 tabular">{count}</span>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p className="font-display text-[17px] font-medium whitespace-nowrap text-ink">
+          All options <span className="ml-0.5 text-ink-3 tabular">{count}</span>
         </p>
         <div className="no-scrollbar -mr-4 overflow-x-auto pr-4 sm:mr-0 sm:pr-0">
           <Segmented<SortKey> label="Sort by" size="sm" value={sort} onChange={onSort} options={SORTS} />
@@ -67,8 +67,8 @@ function ChainChip({
     <button
       onClick={onClick}
       aria-pressed={active}
-      className={`pressable flex h-8 shrink-0 items-center gap-1.5 rounded-[8px] border pr-3 pl-2 text-[13px] font-medium whitespace-nowrap first:pl-3 ${
-        active ? "border-ink bg-ink text-canvas" : "border-line bg-surface text-ink-2 hover:text-ink"
+      className={`pressable flex h-9 shrink-0 items-center gap-1.5 rounded-full pr-3.5 pl-2 font-display text-[13px] font-medium whitespace-nowrap first:pl-3.5 ${
+        active ? "bg-ink text-canvas" : "bg-surface text-ink-2 shadow-card hover:text-ink"
       }`}
     >
       {children}

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { LayoutGroup } from "motion/react";
 import type { Appetite, Asset, Opportunity, SortKey } from "@/lib/types";
 import { formatPct } from "@/lib/format";
-import { projectedEarnings, rank, scoreAll } from "@/lib/scoring";
+import { rank, scoreAll } from "@/lib/scoring";
 import { Composer } from "./Composer";
 import { Filters } from "./Filters";
 import { EmptyState, OpportunityList } from "./OpportunityList";
@@ -136,7 +136,7 @@ export function Explorer({
                 {ranked.length > limit && (
                   <button
                     onClick={() => setPaging({ key: filterKey, n: limit + PAGE })}
-                    className="pressable mx-auto h-9 rounded-[10px] bg-surface px-4 text-[13px] font-medium text-ink shadow-[inset_0_0_0_1px_var(--line)]"
+                    className="pressable mx-auto h-10 rounded-full bg-surface px-5 font-display text-[14px] font-medium text-ink shadow-card"
                   >
                     Show {Math.min(PAGE, ranked.length - limit)} more
                   </button>
@@ -154,7 +154,7 @@ export function Explorer({
         </LayoutGroup>
       </section>
 
-      <Welcome example={top ? { amount, yearly: projectedEarnings(amount, top.apy) } : null} />
+      <Welcome />
       <DetailSheet
         item={sheetItem}
         amount={amount}
@@ -175,7 +175,6 @@ export function Explorer({
 
 function MarketLine({
   pools,
-  chains,
   apps,
   bestSafe,
   asset,
@@ -188,28 +187,23 @@ function MarketLine({
   asset: Asset;
   updatedAt: string;
 }) {
-  const items = [
-    { label: `Best grade-A ${asset}`, value: formatPct(bestSafe), accent: true },
-    { label: "options tracked", value: String(pools) },
-    { label: "DeFi apps", value: String(apps) },
-    { label: "networks", value: String(chains) },
-  ];
+  // One quiet line: the best safe rate, how much we compared, how fresh it is.
   return (
-    <div className="mx-auto mt-10 flex w-full max-w-[680px] flex-col items-center gap-2 px-4">
-      <dl className="flex flex-wrap items-baseline justify-center gap-x-5 gap-y-1.5 text-[13px] text-ink-3">
-        {items.map((s) => (
-          <div key={s.label} className="flex items-baseline gap-1.5">
-            <dd className={`font-display text-[15px] font-semibold tabular ${s.accent ? "text-accent-ink" : "text-ink"}`}>
-              {s.value}
-            </dd>
-            <dt>{s.label}</dt>
-          </div>
-        ))}
-      </dl>
-      <p className="label" suppressHydrationWarning>
-        Data from DeFiLlama · updated {timeAgo(updatedAt)}
-      </p>
-    </div>
+    <p
+      className="mx-auto mt-8 w-full max-w-[680px] px-4 text-center text-[13px] text-ink-3"
+      suppressHydrationWarning
+    >
+      Best grade-A {asset} today{" "}
+      <span className="font-display font-semibold text-accent-ink tabular">{formatPct(bestSafe)}</span>
+      <span className="mx-2" aria-hidden>
+        ·
+      </span>
+      {pools} options across {apps} apps
+      <span className="mx-2" aria-hidden>
+        ·
+      </span>
+      updated {timeAgo(updatedAt)}
+    </p>
   );
 }
 

@@ -85,7 +85,7 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
         <div className="flex items-center gap-3.5">
           <ProtocolMark logo={item.protocol.logo} name={item.protocol.name} chain={item.chain} size={52} />
           <div className="min-w-0 flex-1">
-            <Drawer.Title className="truncate pr-10 font-display text-[22px] leading-tight font-semibold tracking-[-0.02em] text-ink">
+            <Drawer.Title className="truncate pr-12 font-display text-[22px] leading-tight font-semibold tracking-[-0.01em] text-ink">
               {item.protocol.name}
             </Drawer.Title>
             <p className="truncate text-[14px] text-ink-3">
@@ -102,7 +102,7 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
               <p className="flex items-center gap-1.5 text-[13px] font-medium text-ink-3">
                 {scrub ? "Yearly rate on" : "Yearly rate today"} <Term k="apy" icon />
               </p>
-              <p className="mt-1 font-display text-[44px] leading-none font-semibold tracking-[-0.04em] text-ink">
+              <p className="mt-1 font-display text-[44px] leading-none font-semibold tracking-[-0.03em] text-ink">
                 <AnimatedNumber value={shown} format={(n) => formatPct(n)} />
               </p>
               <p className="mt-1.5 h-5 text-[13px] text-ink-3">
@@ -144,7 +144,7 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
         <Section title={`What ${formatUsd(amount)} could earn`}>
           <div className="grid grid-cols-3 gap-2">
             {HORIZONS.map((h) => (
-              <div key={h.days} className="rounded-[10px] border border-line px-3 py-3">
+              <div key={h.days} className="rounded-[18px] bg-surface-2 px-3 py-3">
                 <p className="text-[12px] font-medium text-ink-3">In {h.label}</p>
                 <p className="mt-0.5 font-display text-[18px] font-semibold text-accent-ink tabular">
                   +<AnimatedNumber value={projectedEarnings(amount, item.apy, h.days)} format={(n) => formatUsd(n)} />
@@ -254,7 +254,7 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
 
         {/* Facts */}
         <Section title="Quick facts">
-          <dl className="overflow-hidden rounded-[10px] border border-line">
+          <dl className="overflow-hidden rounded-[20px] bg-surface-2 px-1">
             <Fact label={<Term k="deposits">Money in pool</Term>} value={formatUsd(item.tvlUsd, true)} />
             <Fact label="Trusted to the app" value={formatUsd(item.protocol.tvlUsd, true)} />
             <Fact label="Type of app" value={item.protocol.category} />
@@ -266,13 +266,13 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
       </div>
 
       {/* Sticky CTA: the whole product funnels to this one action. */}
-      <div className="shrink-0 border-t border-line bg-surface px-5 pt-3 pb-[max(env(safe-area-inset-bottom),16px)] md:rounded-b-[14px] md:px-6">
+      <div className="shrink-0 bg-surface px-5 pt-3 pb-[max(env(safe-area-inset-bottom),16px)] md:rounded-b-[28px] md:px-6">
         <a
           href={href}
           target="_blank"
           rel="noopener noreferrer"
           aria-busy={detail.status === "loading"}
-          className="pressable flex h-12 w-full items-center justify-center gap-2 rounded-[10px] bg-ink text-[15px] font-medium text-canvas"
+          className="pressable flex h-13 w-full items-center justify-center gap-2 rounded-full bg-ink font-display text-[16px] font-medium text-canvas"
         >
           {exact ? "Go to this pool on" : "Open"} {site} <ArrowUpRight />
         </a>
@@ -295,8 +295,8 @@ function gradeSummary(g: ScoredOpportunity["grade"]) {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="mt-8 border-t border-line pt-5">
-      <h3 className="mb-3 text-[15px] font-semibold tracking-[-0.01em] text-ink">{title}</h3>
+    <section className="mt-9">
+      <h3 className="mb-3 font-display text-[17px] font-medium text-ink">{title}</h3>
       {children}
     </section>
   );
@@ -304,9 +304,9 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function Step({ n, children }: { n: number; children: React.ReactNode }) {
   return (
-    <li className="flex gap-3 rounded-[10px] bg-surface-2 p-3 text-[14px] leading-snug text-ink-2">
-      <span className="grid size-6 shrink-0 place-items-center rounded-[6px] border border-line bg-surface font-mono text-[11px] text-ink-2">
-        {String(n).padStart(2, "0")}
+    <li className="flex gap-3 rounded-[18px] bg-surface-2 p-3 text-[14px] leading-snug text-ink-2">
+      <span className="grid size-6 shrink-0 place-items-center rounded-full bg-surface font-display text-[12px] font-semibold text-ink-2 shadow-card">
+        {n}
       </span>
       <span className="pt-0.5">{children}</span>
     </li>
@@ -338,7 +338,7 @@ function Legend({
 
 function Fact({ label, value }: { label: React.ReactNode; value: string }) {
   return (
-    <div className="flex items-baseline justify-between gap-4 border-b border-line px-3.5 py-2.5 last:border-b-0">
+    <div className="flex items-baseline justify-between gap-4 border-b border-[var(--hairline)] px-3.5 py-3 last:border-b-0">
       <dt className="text-[13px] text-ink-3">{label}</dt>
       <dd className="truncate text-[14px] font-medium text-ink tabular">{value}</dd>
     </div>

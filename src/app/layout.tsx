@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Geist_Mono, Inter, Inter_Tight } from "next/font/google";
+import { Geist_Mono, Inter, Rubik } from "next/font/google";
 import { SITE } from "@/lib/site";
 import { themeScript } from "@/lib/theme";
 import "./globals.css";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
-// Tight grotesk for headings and figures; mono for small data labels.
-const interTight = Inter_Tight({ variable: "--font-inter-tight", subsets: ["latin"], weight: ["500", "600", "700"] });
+// Rubik: softly rounded corners for headings, figures and buttons; Inter for reading.
+const rubik = Rubik({ variable: "--font-rubik", subsets: ["latin"], weight: ["400", "500", "600"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], weight: ["400", "500"] });
 
 export const metadata: Metadata = {
@@ -38,7 +38,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     // The theme script sets data-theme before hydration, hence the warning suppression.
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${interTight.variable} ${geistMono.variable} h-full antialiased`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${rubik.variable} ${geistMono.variable} h-full antialiased`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>

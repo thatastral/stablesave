@@ -1,156 +1,202 @@
 # StableSave launch film: motion brief
 
-> **For Claude.** This is a complete production spec. Build the film exactly as written using **Remotion**. Before writing code, load the `remotion:remotion-best-practices` skill (and `remotion:remotion-create` to scaffold). Do not improvise new scenes, copy or colours. Where this brief gives a number, use that number.
+> **For Claude.** This is a complete production spec. Build the film exactly as written using **Remotion**. Before writing any code, load `remotion:remotion-best-practices`, and use `remotion:remotion-create` to scaffold. Don't invent new scenes, copy or colours. Where this brief gives a number, use that number.
 
 ---
 
-## 1. The film in one line
+## 1. The story
 
-**"Your stablecoins are sleeping. StableSave shows you where they could earn, how much, and how safe it is, in seconds, without a wallet."**
+A 30-second film with a beginning, middle and end. The structure comes from strong fintech launch films (kinetic problem statements, a single "Introducing" reveal, the product floating on a calm field, one confident closing line):
 
-- **Tone:** calm, precise, confident. Think Linear or Mercury product films, not crypto hype. No neon, no lens flares, no 3D coins, no stock footage.
-- **Hero moment:** typing `$10,000` and watching **"+$512 / yr"** spring into the answer panel.
-- **Promise to keep visible:** *No wallet. No sign-up. We never touch your money.*
+| Act | Feeling | Beat |
+| --- | --- | --- |
+| **I. The problem** | Mild frustration | Your dollars are sitting idle, and DeFi is noisy: jargon, a hundred apps, 40% APYs that feel like traps. |
+| **II. The turn** | Relief | A quiet "Introducing StableSave". The noise falls away and leaves one simple question. |
+| **III. The product** | Delight and clarity | Type an amount and see the answer. Change your comfort level. See the whole market and the risk. |
+| **IV. The promise** | Trust | You deposit on the official app. We never touch your money. |
+| **V. Resolution** | Calm confidence | Logo. "Find where your stablecoins earn the most." |
+
+**One-line pitch:** *Your stablecoins are sleeping. StableSave shows where they could earn, how much, and how safe it is, in seconds, without a wallet.*
+
+**Tone:** soft, warm and precise, like a calm friend who's good with money. No hype, neon, 3D coins, lens flares or stock footage.
 
 ## 2. Deliverables
 
 | Cut | Size | FPS | Length | Composition id |
 | --- | --- | --- | --- | --- |
-| Main (X, site, YouTube) | 1920×1080 | 60 | 30 s (1800 frames) | `Launch16x9` |
+| Main (site, X, YouTube) | 1920×1080 | 60 | 30 s (1800 frames) | `Launch16x9` |
 | Vertical (Reels, TikTok, Shorts) | 1080×1920 | 60 | 30 s | `Launch9x16` |
-| Teaser | 1920×1080 | 60 | 12 s (720 frames) | `Teaser` = scenes 3, 4 and 8 only |
+| Teaser | 1920×1080 | 60 | 12 s (720 frames) | `Teaser` = scenes 4, 5 and 9 |
 
-Render to H.264 MP4, CRF 16, `yuv420p`, plus a ProRes 4444 master of `Launch16x9`.
+Render as H.264 MP4 (CRF 16, `yuv420p`), plus a ProRes 4444 master of `Launch16x9`.
 
 ## 3. Project setup
 
-1. Scaffold in `video/` at the repo root (a separate Remotion project, not inside the Next app).
-2. Install `@remotion/google-fonts`, `@remotion/transitions`, `@remotion/motion-blur`, `@remotion/media-utils`.
-3. **Fonts** (via `@remotion/google-fonts`): `InterTight` 500/600, `Inter` 400/500, `GeistMono` 400. Block render until loaded (`waitForFonts`).
-4. **Data:** copy `src/data/opportunities.json` into `video/public/`. Use real names and rates, never invented numbers. The hero example is **$10,000 USDC → Maple (Syrup USDC), Ethereum, 5.12%, grade A, +$512/yr**. If the snapshot differs, use whatever the "Balanced" top pick in the snapshot is, computed with `src/lib/scoring.ts` (copy that file over).
-5. **Logos:** download protocol logos (`https://icons.llamao.fi/icons/protocols/<slug>`) and network icons (`https://icons.llamao.fi/icons/chains/rsz_<chain>.jpg`), convert them to PNG with `sharp`, and save them in `video/public/logos/`. Load them with `staticFile()`. Needed: maple, aave-v3, fluid-lending, compound-v3, gains-network, pareto-credit, ember-protocol; networks ethereum, arbitrum, base, solana, monad.
-6. **Rebuild the UI as Remotion components.** Do not screen-record the site. Recreate the widget, list rows, detail panel and logo as pure React and inline styles from the tokens below, so every element can be animated independently and stays perfectly sharp.
+1. Scaffold a separate Remotion project in `video/` at the repo root.
+2. Install `@remotion/google-fonts`, `@remotion/transitions`, `@remotion/motion-blur`, `@remotion/noise`.
+3. **Fonts** (via `@remotion/google-fonts`):
+   - **Rubik** 500 and 600 for headlines, numbers and buttons. Its softly rounded shapes are the brand's voice.
+   - **Inter** 400 and 500 for small body text.
+   - **Geist Mono** 400 for tiny uppercase labels.
+   - Do **not** use SF Pro Rounded or Nunito.
+   - Block rendering until fonts load.
+4. **Data:** copy `src/data/opportunities.json` and `src/lib/scoring.ts` into `video/`. Never invent numbers. The hero example is **$10,000 USDC → Maple (Syrup USDC), Ethereum, about 5.1%, grade A, about +$512/yr**. If the snapshot differs, use the real "Balanced" top pick it produces.
+5. **Logos:** download from `https://icons.llamao.fi/icons/protocols/<slug>` and `https://icons.llamao.fi/icons/chains/rsz_<chain>.jpg`, convert to PNG with `sharp`, and save to `video/public/logos/`. Load them with `staticFile()`. Slugs needed: maple, aave-v3, fluid-lending, compound-v3, gains-network, pareto-credit, ember-protocol, kamino-lend, morpho-blue, spark-savings. Networks needed: ethereum, arbitrum, base, solana, monad.
+6. **Rebuild the UI as Remotion React components, not screen recordings:**
+   - the hero widget
+   - the list rows
+   - the side panel
+   - the welcome card
+   - the logo
+   - the halftone backdrop
 
-## 4. Design tokens (use exactly)
+   Match the live site at `stablesave.vercel.app` pixel for pixel.
+
+## 4. Look and feel (use exactly)
+
+The film is **light**, matching the site's default theme. Only the end card's background may switch to dark.
 
 ```ts
-// Dark film. The product's dark theme reads best on social.
 export const T = {
-  canvas: "#0c0c0c",
-  surface: "#171717",
-  surface2: "#1d1d1d",
-  sunken: "#222222",
-  line: "rgba(255,255,255,0.09)",
-  ink: "#f5f5f3",
-  ink2: "#a9a9a5",
-  ink3: "#6e6e6b",
-  accent: "#2bd488",        // earnings, positive
-  accentInk: "#5be3a6",
-  blue: "#6b9bff",
-  gradeA: ["#2bd488", "rgba(43,212,136,0.14)"],
-  gradeB: ["#6b9bff", "rgba(107,155,255,0.15)"],
-  gradeC: ["#f5a524", "rgba(245,165,36,0.15)"],
-  brand: "#0FA968",         // logo square only
-  radius: { widget: 22, panel: 16, chip: 8, pill: 12 },
+  canvas: "#f4f4f1",
+  surface: "#ffffff",
+  surface2: "#f7f7f5",
+  sunken: "#efefeb",
+  ink: "#111111",
+  ink2: "#5d5d5b",
+  ink3: "#9a9a96",
+  accent: "#0fa968",          // growth, earnings
+  accentSoft: "#e3f6ec",
+  accentInk: "#067047",
+  gradeA: ["#0fa968", "#e3f6ec"],
+  gradeB: ["#3a7bfd", "#e8f0ff"],
+  gradeC: ["#e08a00", "#fdf1dc"],
+  brand: "#0FA968",           // logo square only
+  radius: { widget: 30, panel: 22, list: 28, pill: 999 },
 };
-export const EASE_OUT = Easing.bezier(0.23, 1, 0.32, 1);       // all entrances
-export const EASE_IN_OUT = Easing.bezier(0.77, 0, 0.175, 1);   // camera moves
-export const SPRING_UI = { damping: 26, stiffness: 170, mass: 0.7 };   // numbers, chips
-export const SPRING_SOFT = { damping: 30, stiffness: 120, mass: 1 };   // panels, camera settle
+// Softness = no outlines. Depth comes only from these shadows and tinted surfaces.
+export const SHADOW_CARD = "0 1px 2px rgba(17,17,17,0.03), 0 6px 20px -8px rgba(17,17,17,0.08)";
+export const SHADOW_SOFT = "0 1px 2px rgba(17,17,17,0.04), 0 24px 56px -24px rgba(31,52,41,0.22)";
+export const EASE_OUT = Easing.bezier(0.23, 1, 0.32, 1);      // entrances
+export const EASE_IN_OUT = Easing.bezier(0.77, 0, 0.175, 1);  // camera
+export const SPRING_UI = { damping: 26, stiffness: 170, mass: 0.7 };
+export const SPRING_SOFT = { damping: 30, stiffness: 120, mass: 1 };
 ```
 
-- **Type:** headlines in Inter Tight 600, tracking -0.035em. Numbers in Inter Tight 600 with `font-variant-numeric: tabular-nums`, tracking -0.045em. Body in Inter 400/500. Small caps labels in Geist Mono 400, 0.06em tracking, uppercase, colour `ink3`.
-- **Grid:** 16×9 frame with 120 px side margins; everything centres on x = 960 unless stated.
-- **Background:** flat `canvas`. Add a single, barely visible radial light at top centre: `radial-gradient(circle at 50% -10%, rgba(43,212,136,0.07), transparent 55%)`. Nothing else.
+**Rules of the look:**
+- **No outlines anywhere.** Cards, pills, panels and chips are separated only by tint and soft shadow.
+- **Rounded corners everywhere.** Controls and chips are full pills.
+- **No colour gradients** in the background.
+- **Halftone backdrop** (the brand's signature texture): a grid of tiny grey dots, gap 13 px, max radius 1.9 px, colour `rgba(17,17,17,0.075)`. Dot size follows two soft orbit arcs that frame the centre, strongest at the left and right edges, plus one slow drifting bloom. Port `src/components/Backdrop.tsx`'s field function directly into a Remotion `<AbsoluteFill>` canvas driven by `useCurrentFrame()`, so time equals frame × (1000/60). It must stay **very faint**: the viewer should feel it, not read it.
+- **Type:** Rubik 600 headlines with tracking -0.02em to -0.03em. Numbers in Rubik 600 with `tabular-nums`. Small labels in Geist Mono uppercase at 0.06em tracking, `ink3`.
 
 ## 5. Motion rules (non-negotiable)
 
-1. **Entrances:** opacity 0→1, translateY 12→0 px, blur 6→0 px over 18–24 frames with `EASE_OUT`. Never scale from 0. Minimum start scale is 0.96.
-2. **Exits** are faster than entrances: 10–12 frames.
-3. **Stagger** sibling items 3 frames apart (rows, words, chips).
-4. **Numbers never cut.** Every changing number springs with `SPRING_UI` between values. Use a `useSpringNumber(from, to, startFrame)` helper built on `spring()` + `interpolate()`.
-5. **Crossfades** between states (top-pick pill, grade chip) add `filter: blur(4px)` at the midpoint so they read as one morphing object.
-6. **Camera:** a single root `<div>` with `transform: translate/scale` animated by `EASE_IN_OUT`. Wrap camera moves in `<CameraMotionBlur shutterAngle={180} samples={6}>`.
-7. **Presses:** buttons scale to 0.97 for 6 frames, then spring back.
-8. Maximum bounce is very low (a damping ratio around 0.85). Nothing wobbles.
-9. **A fake cursor** (12 px white arrow with a 1 px `#000` stroke and soft shadow) moves along eased Bézier paths (`EASE_IN_OUT`, 24–36 frames per move). It clicks with a 20 px ring that expands to 0 opacity over 12 frames.
+1. **Entrances:** opacity 0→1, y 12→0 px, blur 6→0 px over 18–24 frames with `EASE_OUT`. Nothing ever scales from 0. The minimum starting scale is 0.96.
+2. **Exits** take 10–12 frames, faster than entrances.
+3. **Stagger** siblings 3 frames apart.
+4. **Numbers always spring** (`SPRING_UI`). They never cut.
+5. **State crossfades** (top-pick pill, grade chip) blur to 4 px at the midpoint.
+6. **Camera:** one root transform with `EASE_IN_OUT`, wrapped in `<CameraMotionBlur shutterAngle={180} samples={6}>`.
+7. **Presses:** scale to 0.97 for 6 frames, then spring back.
+8. **No wobble:** damping ratio at least 0.85.
+9. **Cursor:** a soft white arrow (12 px, 1 px `#111` stroke, soft shadow) moving on eased Bézier paths over 24–36 frames. A click shows a 20 px ring that fades to 0 over 12 frames.
+10. The halftone backdrop breathes continuously underneath every scene. It never cuts, even between scenes.
 
-## 6. Scenes (60 fps, `Launch16x9`)
+## 6. Scenes (`Launch16x9`, 60 fps, absolute frames)
 
-Use `<Series>` for the scenes, with `@remotion/transitions` `fade()` (12 frames) only where noted. Frame ranges are absolute.
+### Act I: The problem
 
-### Scene 1: Hook (0–150, 2.5 s)
-- Black canvas. Centre: Geist Mono label `IDLE BALANCE` (fades in, frames 6–24).
-- Below it, Inter Tight 120 px: `$10,000.00` in `ink`. Under that, an `ink3` line `earning $0.00 a year`. The `$0.00` flickers subtly (opacity 0.6↔1, 3 cycles) to suggest nothing is happening.
-- Frame 90: the headline types in word by word (3-frame stagger, blur entrance), in Inter Tight 64 px: **"Your stablecoins are sleeping."**
-- Frames 138–150: everything exits upward 16 px with blur.
+**Scene 1. Asleep (0–150)**
+- Canvas plus halftone. Centre: Geist Mono label `YOUR USDC`.
+- Below it, in Rubik 140 px: `$10,000`. Under that, an `ink3` line `earning $0.00` with a tiny "z z" that drifts up and fades (a soft, playful wink).
+- Frame 80: in Rubik 64 px, word by word: **"Your stablecoins are sleeping."**
 
-### Scene 2: The question (150–330, 3 s)
-- Headline **"How much do you want to grow?"** enters word by word, 56 px, centred at y = 300.
-- Frame 200: the **widget** assembles below it (520 px wide, scaled 1.6× so it reads at 1080p). The outer card rises (translateY 40→0, `SPRING_SOFT`), then the "You have" panel (frame +6), the seam arrow (frame +12, rotate -90°→0°), and the "You could earn" panel (frame +16). Both panels start empty: amount `0` in `ink3`, earnings `—`.
-- Above the headline, a Geist Mono label with a pulsing green dot: `LIVE RATES · NO WALLET OR SIGN-UP`.
+**Scene 2. The noise (150–330)**
+- Floating pill tags drift in from the edges (soft surfaces, shadow only, no outlines, 3-frame stagger), slowly rotating ±4° and gently overlapping: `APY?`, `TVL`, `100+ protocols`, `40% APY 🤔`, `bridges`, `reward tokens`, `which chain?`, `is this safe?`.
+- Centre, in Rubik 56 px: **"Earning on DeFi shouldn't feel like homework."**
+- Frames 300–330: every tag drifts outward and fades as if a breath clears the room (exit with blur).
 
-### Scene 3: Typing the amount (330–660, 5.5 s). This is the hero moment.
-- The cursor moves into the amount field and clicks (frame 350). The panel gets a 1.5 px inner `accent` ring.
-- Type `1`, `0`, `0`, `0`, `0` at a natural cadence (frames 370, 382, 392, 404, 414), with comma formatting appearing live (`10,000`). A caret blinks at 1 Hz.
-- After each keystroke, the **"You could earn" number springs** to the value for that amount (+$0.05 → +$0.51 → +$5 → +$51 → **+$512**) and the Maple pill blurs in on the first keystroke.
-- Frame 450: a soft camera push-in (scale 1 → 1.12, centred on the answer panel, 60 frames, `EASE_IN_OUT`).
-- Frame 520: the detail line under the number fades in: `5.12% yearly rate · [A Safer] · ≈ $42.69 a month`. The grade chip pops (scale 0.96→1, `SPRING_UI`).
-- Caption (lower third, Geist Mono, `ink2`): `TYPE AN AMOUNT. SEE WHAT IT COULD EARN.`
+### Act II: The turn
 
-### Scene 4: Risk comfort (660–900, 4 s)
-- The camera eases back to scale 1.0. The cursor moves to the segmented control.
-- Click **Go bigger** (frame 700): the active tile slides (`SPRING_UI`), the earnings spring to the "Go bigger" top pick (+$4,057, Gains Network, grade C, amber chip), and the pill crossfades with blur.
-- Click **Play it safe** (frame 790): back to a grade-A pick (Maple or Aave). Numbers spring down and the chip goes green.
+**Scene 3. Introducing (330–450)**
+- Pure canvas. The halftone bloom drifts to the centre.
+- Geist Mono `INTRODUCING` fades in, then the logo builds: the green rounded square (rx 9) scales 0.96→1, the three coin bars rise into place bottom to top (5-frame stagger, `SPRING_UI`), and the wordmark **StableSave** reveals with a clip-path wipe over 18 frames.
+- Hold for 30 frames, then the logo glides up and shrinks into the header position, becoming the site header (a FLIP move, `SPRING_SOFT`).
+
+### Act III: The product
+
+**Scene 4. One question (450–600)**
+- Headline **"How much do you want to grow?"** appears word by word (Rubik 56 px).
+- The **widget** rises (translateY 40→0, `SPRING_SOFT`): the white card with `SHADOW_SOFT`, then the "You have" panel, then the round seam button (rotates -90°→0°), then the mint "You could earn in a year" panel. Everything starts empty: `$0`, `—`.
+
+**Scene 5. The answer (600–900). This is the hero moment.**
+- The cursor clicks the amount. The panel gets a soft 2 px mint inner glow.
+- Type `1`, `0`, `0`, `0`, `0` (frames 630, 642, 652, 664, 674) with live comma formatting.
+- After every keystroke the earnings **spring** (+$0.05 → +$0.51 → +$5 → +$51 → **+$512**). The Maple pill blurs in on the first keystroke.
+- Frame 720: gentle camera push-in on the answer panel (scale 1 → 1.14, 60 frames).
+- Frame 790: `at 5.12% a year` fades in, then the round **A Safer** chip pops (scale 0.96→1).
+- Caption (Geist Mono, `ink2`, lower third): `TYPE AN AMOUNT. SEE WHAT IT COULD EARN.`
+
+**Scene 6. Your comfort (900–1080)**
+- The camera eases back. The cursor taps **Go bigger**: the pill indicator slides, the earnings spring up, the pick crossfades (grade C, amber chip).
+- It taps **Play it safe**: the earnings spring back down, the chip turns green.
 - Caption: `PICK YOUR COMFORT. WE DO THE MATH.`
 
-### Scene 5: The whole market (900–1200, 5 s)
-- Camera pulls back and tilts the view upward (translateY -480 px, scale 1 → 0.82, 72 frames, `EASE_IN_OUT`, motion blur) to reveal the options list under the widget.
-- Rows stagger in (3 frames apart, 8 rows): logo with network badge, name, grade chip, rate, `+$x/yr` in `accent`.
-- Frame 1080: the sort switches to **Highest rate** and rows **reorder with a FLIP animation** (each row springs to its new y with `SPRING_SOFT`). Then it switches back to **Best for you**.
-- Market line counts up from 0: `150 options tracked · 56 DeFi apps · 21 networks`.
+**Scene 7. The whole market (1080–1320)**
+- The camera glides down (translateY -520, scale 0.84, 72 frames, motion blur) to the soft white list card (radius 28, no outlines).
+- Eight rows stagger in. The sort switches to **Highest rate** and rows **reorder with FLIP springs**, then switch back.
+- A quiet line types in: `Best grade-A USDC today 6.19% · 150 options across 56 apps`.
 - Caption: `EVERY OPTION. ONE CLEAR SAFETY GRADE.`
 
-### Scene 6: Under the hood (1200–1500, 5 s)
-- The cursor clicks the Maple row. The **detail panel slides in from the right** (translateX 100% → 0, `SPRING_SOFT`) while the list dims to 40%.
-- The APY chart **draws left to right** (stroke-dashoffset, 48 frames, `EASE_OUT`) with a soft green area fade-in behind it, and the end dot pulses once.
-- The safety ring fills from 0 to **87**, then the five factor bars fill with a 4-frame stagger, using the real scores from the scoring code:
-  - How established the app is
-  - Size of the pool
-  - How steady the rate is
-  - Real interest vs. bonuses
-  - Time running
+**Scene 8. Under the hood (1320–1560)**
+- Tap the Maple row. The **side panel** slides in from the right (radius 28, `SPRING_SOFT`) while the page softly blurs (6 px) and dims.
+- The rate chart draws left to right (48 frames) with a faint mint area underneath. The end dot pulses once.
+- The safety ring fills to **87**, then the five factor bars fill with a 4-frame stagger, labelled in plain English:
+  - "How established the app is"
+  - "Size of the pool"
+  - "How steady the rate is"
+  - "Real interest vs. bonuses"
+  - "Time running"
 - Caption: `SEE THE RISK, NOT JUST THE RATE.`
 
-### Scene 7: The hand-off (1500–1620, 2 s)
-- The camera settles on the sticky CTA **"Go to this pool on app.maple.finance ↗"**. The cursor presses it (scale 0.97 press).
-- The shield line types in beneath it: `You deposit on the official app. StableSave never touches your money.`
+### Act IV: The promise
 
-### Scene 8: End card (1620–1800, 3 s)
-- `fade()` transition to clean `canvas`.
-- **Logo build:** the green square scales 0.96→1 and fades in. The three white coin bars slide up into place one by one (bottom, middle, top; 5-frame stagger; translateY 10→0, `SPRING_UI`). Then the wordmark `StableSave` reveals left to right with a clip-path (`inset(0 100% 0 0)` → `inset(0 0 0 0)`, 18 frames).
-- Below: `Find where your stablecoins earn the most.` (Inter 32 px, `ink2`).
-- Below that: Geist Mono `stablesave.vercel.app` and `NO WALLET · NO SIGN-UP · FREE`.
-- Hold still for the final 40 frames. No movement at all.
+**Scene 9. The hand-off (1560–1680)**
+- Settle on the full-pill black CTA **"Go to this pool on app.maple.finance ↗"**. The cursor presses it (0.97).
+- A shield icon and line type in: **"You deposit on the official app. We never touch your money."**
+
+### Act V: Resolution
+
+**Scene 10. End card (1680–1800)**
+- Fade (12 frames) to canvas with the halftone arcs at their most visible, still faint.
+- The logo builds again (same as Scene 3, faster). Under it, in Rubik 34 px `ink2`: **"Find where your stablecoins earn the most."**
+- Below, in Geist Mono: `stablesave.vercel.app` and `NO WALLET · NO SIGN-UP · FREE`.
+- Final 40 frames: completely still. Only the halftone keeps breathing.
 
 ## 7. Vertical cut (`Launch9x16`)
-- Same scenes and timings. The widget renders at 1.3× and is centred at y = 760. Captions sit at y = 1500, so they stay clear of platform UI.
-- In Scene 5 the list replaces the widget instead of panning (crossfade with blur). In Scene 6 the panel rises as a bottom sheet (translateY 100% → 0), matching the mobile product.
+- Same story and timing. The widget renders at 1.3× and is centred at y = 760. Captions sit at y = 1500, clear of platform UI.
+- Scene 2's tags fill the tall frame. In Scene 7 the list replaces the widget (blur crossfade). In Scene 8 the panel rises as a **bottom sheet** (radius 28 top corners), matching mobile.
 
-## 8. Sound (optional but recommended)
-- One understated track at about 100 BPM. A soft piano or synth pulse, no drops.
-- **SFX**, mixed low (-24 dB): a soft key tick per keystroke, a muted "tock" on clicks, and a single low swell when the answer first lands (frame 414). Nothing else.
-- Leave 6 frames of silence at the very end.
+## 8. Sound
+- One warm, understated track around 96–100 BPM: soft keys or plucked synth, no drops.
+- **SFX at about -24 dB:**
+  - a soft tick per keystroke
+  - a muted "tock" per click
+  - a gentle low swell when +$512 lands (frame 674)
+  - a soft whoosh for the noise clearing (frame 300)
+- Leave 6 frames of silence at the end.
 
-## 9. Quality checklist (Claude must verify before rendering)
-- [ ] Every number in frame comes from `opportunities.json` and the copied scoring code. No made-up APYs.
-- [ ] No element ever scales from 0, and nothing appears or disappears without an entrance or exit.
-- [ ] All number changes spring. None cut.
-- [ ] Text is never smaller than 24 px at 1080p (32 px in the vertical cut).
-- [ ] Captions stay on screen for at least 1.5 s.
-- [ ] Logos are crisp PNGs, not upscaled WebP.
-- [ ] The final 40 frames are perfectly still.
-- [ ] Preview in Remotion Studio at 0.25× speed to check every easing, then render.
+## 9. Quality checklist (verify before rendering)
+- [ ] All rates, names and logos come from `opportunities.json` and the copied scoring code.
+- [ ] No outlines or borders on any UI element, and no colour gradients in the background.
+- [ ] Rubik is used for every headline and number.
+- [ ] The halftone is grey and barely visible, and it never stops or cuts.
+- [ ] Nothing scales from 0, and every number springs.
+- [ ] The story reads with the sound off: problem → turn → product → promise → logo.
+- [ ] Text is at least 24 px at 1080p (32 px in the vertical cut), and captions stay up at least 1.5 s.
+- [ ] Logos are crisp PNGs. The last 40 frames are still.
+- [ ] Scrub every scene at 0.25× in Remotion Studio before the final render.
 
 ## 10. Commands
 ```bash

@@ -1,5 +1,6 @@
 import { Explorer } from "@/components/Explorer";
 import { Footer, Header } from "@/components/Chrome";
+import { Backdrop } from "@/components/Backdrop";
 import { getOpportunityFeed } from "@/lib/server/yields";
 import type { Appetite, Asset } from "@/lib/types";
 
@@ -19,12 +20,14 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   };
 
   return (
-    <>
+    // isolate: the backdrop sits behind content without escaping this page.
+    <div className="relative isolate flex flex-1 flex-col">
+      <Backdrop />
       <Header />
       <main className="flex-1">
         <Explorer opportunities={opportunities} updatedAt={updatedAt} init={init} />
       </main>
       <Footer />
-    </>
+    </div>
   );
 }

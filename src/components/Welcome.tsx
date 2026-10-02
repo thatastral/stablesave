@@ -3,8 +3,6 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
-import { formatUsd } from "@/lib/format";
-import { TokenIcon } from "./primitives";
 
 const SEEN_KEY = "stablesave:welcome-v1";
 const OPEN_EVENT = "stablesave:welcome";
@@ -27,7 +25,7 @@ export function HelpButton() {
   return (
     <button
       onClick={() => window.dispatchEvent(new Event(OPEN_EVENT))}
-      className="pressable flex h-8 items-center gap-1.5 rounded-[8px] border border-line bg-surface px-2.5 text-[13px] font-medium text-ink-2 hover:text-ink"
+      className="pressable flex h-9 items-center gap-1.5 rounded-full bg-surface pr-3.5 pl-3 font-display text-[13px] font-medium text-ink-2 shadow-card hover:text-ink"
     >
       <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
         <circle cx="8" cy="8" r="6.25" stroke="currentColor" strokeWidth="1.5" />
@@ -46,21 +44,20 @@ export function HelpButton() {
 const STEPS = [
   {
     title: "Tell us how much you have",
-    body: "Type an amount of USDC or USDT. These are crypto dollars, each always worth about $1.",
+    body: "USDC or USDT, crypto dollars worth $1 each.",
   },
   {
     title: "We compare savings options for you",
-    body: "We check interest rates and safety across dozens of DeFi apps and put the best fits first.",
+    body: "Rates and safety across dozens of DeFi apps.",
   },
   {
     title: "Deposit on the official app",
-    body: "Pick one and we take you straight to it. You deposit there. We never touch your money.",
+    body: "We send you straight there. We never touch your money.",
   },
 ];
 
-export function Welcome({ example }: { example: { amount: number; yearly: number } | null }) {
+export function Welcome() {
   const [open, setOpen] = useState(false);
-  const [more, setMore] = useState(false);
   // Portals need document.body, so render nothing on the server.
   const mounted = useSyncExternalStore(
     () => () => {},
@@ -98,7 +95,6 @@ export function Welcome({ example }: { example: { amount: number; yearly: number
 
   function close() {
     setOpen(false);
-    setMore(false);
     markSeen();
   }
 
@@ -108,7 +104,7 @@ export function Welcome({ example }: { example: { amount: number; yearly: number
       {open && (
         <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-6">
           <motion.div
-            className="absolute inset-0 bg-black/30"
+            className="absolute inset-0 bg-[color-mix(in_srgb,var(--canvas)_35%,rgba(0,0,0,0.25))] backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.15 } }}
@@ -118,142 +114,77 @@ export function Welcome({ example }: { example: { amount: number; yearly: number
             role="dialog"
             aria-modal="true"
             aria-labelledby="welcome-title"
-            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 12, scale: 0.98 }}
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={reduce ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.99, transition: { duration: 0.15 } }}
-            transition={{ duration: 0.28, ease: EASE }}
-            className="relative flex max-h-[92dvh] w-full max-w-[460px] flex-col overflow-hidden rounded-t-[18px] border border-line bg-surface shadow-float sm:rounded-[14px]"
+            exit={reduce ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.98, transition: { duration: 0.15 } }}
+            transition={{ type: "spring", duration: 0.45, bounce: 0.12 }}
+            className="relative w-full max-w-[420px] rounded-t-[30px] bg-surface p-6 pb-[max(env(safe-area-inset-bottom),24px)] shadow-float sm:rounded-[30px]"
           >
-            <div className="no-scrollbar overflow-y-auto">
-              <Preview example={example} />
-
-              <div className="px-6 pt-6 pb-2">
-                <h2
-                  id="welcome-title"
-                  className="font-display text-[26px] leading-[1.1] font-semibold tracking-[-0.03em] text-ink"
-                >
-                  Put your idle crypto dollars to work
-                </h2>
-                <p className="mt-2 text-[15px] leading-relaxed text-ink-2">
-                  Stablecoins can earn interest, a bit like a savings account. StableSave shows you where, how much,
-                  and how risky it is, in plain English.
-                </p>
-
-                <ol className="mt-6 overflow-hidden rounded-[10px] border border-line">
-                  {STEPS.map((s, i) => (
-                    <li key={s.title} className={`flex gap-3.5 px-4 py-3.5 ${i ? "border-t border-line" : ""}`}>
-                      <span className="mt-0.5 font-mono text-[12px] text-accent-ink tabular">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <span>
-                        <span className="block text-[14px] font-semibold text-ink">{s.title}</span>
-                        <span className="mt-0.5 block text-[13px] leading-snug text-ink-3">{s.body}</span>
-                      </span>
-                    </li>
-                  ))}
-                </ol>
-
-                <button
-                  onClick={() => setMore((m) => !m)}
-                  aria-expanded={more}
-                  className="mt-3 flex w-full items-center justify-between py-2 text-left text-[14px] font-medium text-ink"
-                >
-                  Is this safe?
-                  <motion.svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    animate={{ rotate: more ? 45 : 0 }}
-                    transition={{ duration: 0.2, ease: EASE }}
-                    className="text-ink-3"
-                    aria-hidden
-                  >
-                    <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                  </motion.svg>
-                </button>
-                <AnimatePresence initial={false}>
-                  {more && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.25, ease: EASE }}
-                      className="overflow-hidden"
-                    >
-                      <p className="pb-2 text-[14px] leading-relaxed text-ink-2">
-                        Browsing here is completely safe: no wallet, no sign-up, nothing to sign. Depositing is where
-                        the risk is. DeFi apps aren’t banks, so there’s no deposit insurance. That’s why every option
-                        gets an <b className="text-ink">A–D safety grade</b>. If you’re new, start with A or B and a
-                        small amount.
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+            <div className="flex items-center gap-3">
+              <span className="grid size-11 place-items-center rounded-[14px] bg-accent-soft">
+                <svg width="22" height="22" viewBox="0 0 32 32" aria-hidden>
+                  <rect x="6.5" y="19.5" width="12" height="5" rx="2.5" fill="var(--accent)" fillOpacity=".45" />
+                  <rect x="10" y="13.5" width="12" height="5" rx="2.5" fill="var(--accent)" fillOpacity=".7" />
+                  <rect x="13.5" y="7.5" width="12" height="5" rx="2.5" fill="var(--accent)" />
+                </svg>
+              </span>
+              <span className="label">Welcome to StableSave</span>
             </div>
 
-            <div className="shrink-0 border-t border-line px-6 pt-4 pb-[max(env(safe-area-inset-bottom),20px)]">
-              <button
-                ref={primary}
-                onClick={close}
-                className="pressable h-12 w-full rounded-[10px] bg-ink text-[15px] font-medium text-canvas"
-              >
-                Show me my options
-              </button>
-              <p className="label mt-3 text-center">Free · No wallet needed · No sign-up</p>
-            </div>
+            <h2
+              id="welcome-title"
+              className="mt-5 font-display text-[26px] leading-[1.12] font-semibold tracking-[-0.02em] text-ink"
+            >
+              Put your idle crypto dollars to work
+            </h2>
+            <p className="mt-2 text-[15px] leading-relaxed text-ink-2">
+              Stablecoins can earn interest, like a savings account. We show you where, how much, and how risky.
+            </p>
+
+            <ol className="mt-5 flex flex-col gap-3">
+              {STEPS.map((s, i) => (
+                <motion.li
+                  key={s.title}
+                  initial={reduce ? false : { opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, ease: EASE, delay: 0.12 + i * 0.05 }}
+                  className="flex items-start gap-3"
+                >
+                  <span className="mt-px grid size-6 shrink-0 place-items-center rounded-full bg-surface-2 font-display text-[12px] font-semibold text-ink-2">
+                    {i + 1}
+                  </span>
+                  <span>
+                    <span className="block text-[14px] font-semibold text-ink">{s.title}</span>
+                    <span className="block text-[13px] leading-snug text-ink-3">{s.body}</span>
+                  </span>
+                </motion.li>
+              ))}
+            </ol>
+
+            {/* Reassurance is always visible, not hidden behind a toggle. */}
+            <p className="mt-5 flex gap-2.5 rounded-[18px] bg-surface-2 px-4 py-3 text-[13px] leading-snug text-ink-2">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="mt-px shrink-0 text-accent" aria-hidden>
+                <path d="M8 1.8 3 3.7v4c0 3.1 2.1 5.6 5 6.5 2.9-.9 5-3.4 5-6.5v-4L8 1.8Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+                <path d="m5.8 8 1.6 1.6L10.4 6.6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span>
+                Browsing is completely safe. DeFi isn’t a bank, so every option gets an{" "}
+                <b className="font-semibold text-ink">A–D safety grade</b>. New? Start with A or B.
+              </span>
+            </p>
+
+            <button
+              ref={primary}
+              onClick={close}
+              className="pressable mt-6 h-13 w-full rounded-full bg-ink font-display text-[16px] font-medium text-canvas"
+            >
+              Show me my options
+            </button>
+            <p className="label mt-3 text-center">Free · No wallet · No sign-up</p>
           </motion.div>
         </div>
       )}
     </AnimatePresence>,
     document.body,
-  );
-}
-
-/** A small "statement" showing the core idea: dollars in, interest out. */
-function Preview({ example }: { example: { amount: number; yearly: number } | null }) {
-  const amount = example?.amount || 10_000;
-  const yearly = example?.yearly ?? 0;
-  return (
-    <div
-      className="relative border-b border-line px-6 py-6"
-      style={{
-        backgroundColor: "var(--surface-2)",
-        backgroundImage: "radial-gradient(var(--line) 1px, transparent 1px)",
-        backgroundSize: "14px 14px",
-      }}
-    >
-      <div className="rounded-[10px] border border-line bg-surface shadow-card">
-        <div className="flex items-center justify-between px-4 py-3">
-          <span className="flex items-center gap-2 text-[13px] text-ink-2">
-            <TokenIcon asset="USDC" size={18} />
-            You deposit
-          </span>
-          <span className="font-display text-[16px] font-semibold text-ink tabular">{formatUsd(amount)}</span>
-        </div>
-        <div className="flex items-center justify-between border-t border-dashed border-line px-4 py-3">
-          <span className="text-[13px] text-ink-2">Interest in a year</span>
-          <span className="font-display text-[16px] font-semibold text-accent-ink tabular">
-            {yearly > 0 ? `+${formatUsd(yearly)}` : "—"}
-          </span>
-        </div>
-        <div className="flex items-center justify-between border-t border-line bg-surface-2 px-4 py-2.5">
-          <span className="label">Safety</span>
-          <span
-            className="inline-flex h-5 items-center gap-1 rounded-[5px] pr-1.5 pl-[2px] text-[11px] font-medium"
-            style={{ background: "var(--grade-a-soft)", color: "var(--grade-a)" }}
-          >
-            <span
-              className="grid size-4 place-items-center rounded-[3px] font-mono text-[10px] text-white"
-              style={{ background: "var(--grade-a)" }}
-            >
-              A
-            </span>
-            Safer
-          </span>
-        </div>
-      </div>
-    </div>
   );
 }

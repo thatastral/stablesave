@@ -17,7 +17,6 @@ export const dynamic = "force-dynamic";
 const CANVAS = "#0c0c0c";
 const SURFACE = "#141414";
 const SURFACE_2 = "#1a1a1a";
-const LINE = "rgba(255,255,255,0.09)";
 const INK = "#f5f5f3";
 const INK_2 = "#a9a9a5";
 const INK_3 = "#6e6e6b";
@@ -48,8 +47,9 @@ async function logo(url: string, px: number): Promise<string | null> {
 
 export default async function Image() {
   const font = (f: string) => readFile(join(process.cwd(), "assets", f));
-  const [tight, mono, regular, medium, feed] = await Promise.all([
-    font("InterTight-SemiBold.ttf"),
+  const [rubik, rubikMedium, mono, regular, medium, feed] = await Promise.all([
+    font("Rubik-SemiBold.ttf"),
+    font("Rubik-Medium.ttf"),
     font("GeistMono-Regular.ttf"),
     font("Inter-Regular.ttf"),
     font("Inter-Medium.ttf"),
@@ -94,7 +94,7 @@ export default async function Image() {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <Mark size={34} />
-            <div style={{ display: "flex", fontFamily: "Inter Tight", fontSize: 28, letterSpacing: -0.8 }}>StableSave</div>
+            <div style={{ display: "flex", fontFamily: "Rubik", fontSize: 28, letterSpacing: -0.8 }}>StableSave</div>
           </div>
           <div style={{ display: "flex", fontFamily: "Geist Mono", fontSize: 16, color: INK_3, letterSpacing: 0.5 }}>
             stablesave.vercel.app
@@ -109,10 +109,10 @@ export default async function Image() {
               style={{
                 display: "flex",
                 marginTop: 22,
-                fontFamily: "Inter Tight",
+                fontFamily: "Rubik",
                 fontSize: 64,
                 lineHeight: 1.03,
-                letterSpacing: -1.9,
+                letterSpacing: -1.4,
               }}
             >
               Find where your stablecoins earn the most.
@@ -132,8 +132,7 @@ export default async function Image() {
               flexDirection: "column",
               flex: 1,
               alignSelf: "flex-start",
-              border: `1px solid ${LINE}`,
-              borderRadius: 16,
+              borderRadius: 28,
               background: SURFACE,
               overflow: "hidden",
             }}
@@ -143,7 +142,6 @@ export default async function Image() {
                 display: "flex",
                 alignItems: "center",
                 padding: "13px 20px",
-                borderBottom: `1px solid ${LINE}`,
                 background: SURFACE_2,
               }}
             >
@@ -169,7 +167,6 @@ export default async function Image() {
                   alignItems: "center",
                   justifyContent: "space-between",
                   padding: "15px 20px",
-                  borderTop: `1px solid ${LINE}`,
                   background: SURFACE_2,
                 }}
               >
@@ -178,7 +175,7 @@ export default async function Image() {
                 </div>
                 <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
                   <div
-                    style={{ display: "flex", fontFamily: "Inter Tight", fontSize: 24, color: ACCENT, letterSpacing: -0.6 }}
+                    style={{ display: "flex", fontFamily: "Rubik", fontSize: 24, color: ACCENT, letterSpacing: -0.6 }}
                   >
                     +{usd(projectedEarnings(amount, top.apy))}
                   </div>
@@ -193,7 +190,8 @@ export default async function Image() {
     {
       ...size,
       fonts: [
-        { name: "Inter Tight", data: tight, weight: 600, style: "normal" },
+        { name: "Rubik", data: rubik, weight: 600, style: "normal" },
+        { name: "Rubik", data: rubikMedium, weight: 500, style: "normal" },
         { name: "Geist Mono", data: mono, weight: 400, style: "normal" },
         { name: "Inter", data: regular, weight: 400, style: "normal" },
         { name: "Inter", data: medium, weight: 500, style: "normal" },
@@ -220,7 +218,7 @@ function Row({
         display: "flex",
         alignItems: "center",
         padding: "14px 20px",
-        borderTop: first ? "none" : `1px solid ${LINE}`,
+        borderTop: first ? "none" : "1px solid rgba(255,255,255,0.05)",
       }}
     >
       <div style={{ display: "flex", alignItems: "center", flex: 1, gap: 14 }}>
@@ -237,7 +235,7 @@ function Row({
                 background: SURFACE_2,
                 alignItems: "center",
                 justifyContent: "center",
-                fontFamily: "Inter Tight",
+                fontFamily: "Rubik",
                 fontSize: 17,
                 color: INK_2,
               }}
@@ -262,7 +260,7 @@ function Row({
           )}
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ display: "flex", fontFamily: "Inter Tight", fontSize: 20, letterSpacing: -0.3 }}>
+          <div style={{ display: "flex", fontFamily: "Rubik", fontSize: 20, letterSpacing: -0.3 }}>
             {o.protocol.name}
           </div>
           <div style={{ display: "flex", fontSize: 15, color: INK_3, marginTop: 2 }}>{o.chain}</div>
@@ -273,7 +271,7 @@ function Row({
           display: "flex",
           width: 96,
           justifyContent: "flex-end",
-          fontFamily: "Inter Tight",
+          fontFamily: "Rubik",
           fontSize: 22,
           letterSpacing: -0.4,
         }}
@@ -286,8 +284,8 @@ function Row({
             display: "flex",
             alignItems: "center",
             gap: 6,
-            padding: "3px 8px 3px 3px",
-            borderRadius: 6,
+            padding: "3px 10px 3px 3px",
+            borderRadius: 999,
             background: bg,
             color: fg,
             fontWeight: 500,
@@ -301,7 +299,7 @@ function Row({
               justifyContent: "center",
               width: 20,
               height: 20,
-              borderRadius: 4,
+              borderRadius: 999,
               background: fg,
               color: CANVAS,
               fontFamily: "Geist Mono",
@@ -338,9 +336,9 @@ function Mark({ size }: { size: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32">
       <rect width="32" height="32" rx="8" fill="#0FA968" />
-      <rect x="6.5" y="19.5" width="12" height="5" rx="1.5" fill="#fff" fillOpacity=".55" />
-      <rect x="10" y="13.5" width="12" height="5" rx="1.5" fill="#fff" fillOpacity=".78" />
-      <rect x="13.5" y="7.5" width="12" height="5" rx="1.5" fill="#fff" />
+      <rect x="6.5" y="19.5" width="12" height="5" rx="2.5" fill="#fff" fillOpacity=".55" />
+      <rect x="10" y="13.5" width="12" height="5" rx="2.5" fill="#fff" fillOpacity=".78" />
+      <rect x="13.5" y="7.5" width="12" height="5" rx="2.5" fill="#fff" />
     </svg>
   );
 }

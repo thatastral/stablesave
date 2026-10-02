@@ -20,7 +20,7 @@ export function OpportunityList({
   onToggleCompare: (id: string) => void;
 }) {
   return (
-    <ul className="overflow-hidden rounded-[18px] border border-line bg-surface shadow-card">
+    <ul className="overflow-hidden rounded-[28px] bg-surface p-1.5 shadow-card">
       <AnimatePresence initial={false} mode="popLayout">
         {items.map((o, i) => {
           const inCompare = compare.includes(o.id);
@@ -34,25 +34,25 @@ export function OpportunityList({
               transition={spring}
               className="relative"
             >
-              {i > 0 && <span aria-hidden className="absolute top-0 right-4 left-[72px] h-px bg-line" />}
-              <div className="row-hover group flex items-center gap-3 px-4 py-3.5 transition-colors duration-150">
+              {i > 0 && <span aria-hidden className="absolute top-0 right-5 left-[76px] h-px bg-[var(--hairline)]" />}
+              <div className="row-hover group flex items-center gap-3 rounded-[22px] px-3.5 py-3.5 transition-colors duration-150">
                 <button onClick={() => onOpen(o.id)} className="flex min-w-0 flex-1 items-center gap-3.5 text-left outline-none">
                   <ProtocolMark logo={o.protocol.logo} name={o.protocol.name} chain={o.chain} size={40} />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[15px] font-semibold tracking-[-0.01em] text-ink">
+                    <span className="block truncate font-display text-[15px] font-medium text-ink">
                       {o.protocol.name}
                       {o.poolMeta && <span className="font-normal text-ink-3"> · {o.poolMeta}</span>}
                     </span>
                     <span className="mt-1 flex items-center gap-1.5 truncate text-[12px] text-ink-3">
                       <GradeDot grade={o.grade} />
                       <span className="truncate">
-                        {o.chain} · {formatUsd(o.tvlUsd, true)} deposited
+                        {o.chain} · {formatUsd(o.tvlUsd, true)}
                         {o.hasRewards && <span className="text-blue"> · incl. bonus</span>}
                       </span>
                     </span>
                   </span>
                   <span className="shrink-0 text-right">
-                    <span className="block font-display text-[17px] font-semibold tracking-[-0.02em] text-ink tabular">
+                    <span className="block font-display text-[17px] font-semibold tracking-[-0.01em] text-ink tabular">
                       {formatPct(o.apy)}
                     </span>
                     <span className="mt-0.5 block text-[12px] font-medium text-accent-ink tabular">
@@ -65,7 +65,7 @@ export function OpportunityList({
                   aria-pressed={inCompare}
                   aria-label={inCompare ? `Remove ${o.protocol.name} from compare` : `Add ${o.protocol.name} to compare`}
                   title={inCompare ? "Remove from compare" : "Add to compare"}
-                  className={`pressable grid size-8 shrink-0 place-items-center rounded-[10px] transition-colors ${
+                  className={`pressable grid size-8 shrink-0 place-items-center rounded-full transition-colors ${
                     inCompare ? "bg-ink text-canvas" : "bg-surface-2 text-ink-3 hover:text-ink"
                   }`}
                 >
@@ -95,7 +95,7 @@ function GradeDot({ grade, className = "" }: { grade: ScoredOpportunity["grade"]
   return (
     <span
       title={`Safety grade ${grade}: ${GRADE_LABEL[grade]}`}
-      className={`inline-grid h-4 min-w-4 shrink-0 place-items-center rounded-[4px] px-1 font-mono text-[10px] font-medium ${className}`}
+      className={`inline-grid h-4 min-w-4 shrink-0 place-items-center rounded-full px-1 font-display text-[10px] font-semibold ${className}`}
       style={{ color: fg, background: bg }}
     >
       {grade}
@@ -105,7 +105,7 @@ function GradeDot({ grade, className = "" }: { grade: ScoredOpportunity["grade"]
 
 export function EmptyState({ onReset }: { onReset: () => void }) {
   return (
-    <div className="flex flex-col items-center rounded-[18px] border border-line bg-surface px-6 py-12 text-center">
+    <div className="flex flex-col items-center rounded-[28px] bg-surface px-6 py-12 text-center shadow-card">
       <p className="label">No results</p>
       <p className="mt-2 font-display text-[20px] font-semibold tracking-[-0.01em] text-ink">
         No matches with these filters
@@ -115,7 +115,7 @@ export function EmptyState({ onReset }: { onReset: () => void }) {
       </p>
       <button
         onClick={onReset}
-        className="pressable mt-5 h-9 rounded-[10px] bg-ink px-4 text-[14px] font-medium text-canvas"
+        className="pressable mt-5 h-10 rounded-full bg-ink px-5 text-[14px] font-medium text-canvas"
       >
         Show everything
       </button>
