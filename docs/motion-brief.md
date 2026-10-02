@@ -44,8 +44,9 @@ Render as H.264 MP4 (CRF 16, `yuv420p`), plus a ProRes 4444 master of `Main16x9`
    - Do **not** use SF Pro Rounded or Nunito.
    - Block rendering until fonts load.
 4. **Data:** copy `src/data/opportunities.json` and `src/lib/scoring.ts` into `video/`. Never invent numbers. The hero example is **$10,000 USDC → Maple (Syrup USDC), Ethereum, about 5.1%, grade A, about +$512/yr**. If the snapshot differs, use the real "Balanced" top pick it produces.
-5. **Logos:** download from `https://icons.llamao.fi/icons/protocols/<slug>` and `https://icons.llamao.fi/icons/chains/rsz_<chain>.jpg`, convert to PNG with `sharp`, and save to `video/public/logos/`. Load them with `staticFile()`. Slugs needed: maple, aave-v3, fluid-lending, compound-v3, gains-network, pareto-credit, ember-protocol, kamino-lend, morpho-blue, spark-savings. Networks needed: ethereum, arbitrum, base, solana, monad.
-6. **Rebuild the UI as Remotion React components, not screen recordings:**
+5. **StableSave logo:** use the founder's exact Figma export. Never redraw it. The file is `src/app/icon.svg` (185×185, tile `#00AD61`), and its paths are exported from `src/lib/logo.ts` (`LOGO_TILE`, and `LOGO_COINS` ordered bottom, middle, top). Animate each coin path as its own layer (`transform-box: fill-box; transform-origin: center`) so the coins can drop in individually and settle into their final, slightly askew positions. The final frame must match `src/app/icon.svg` exactly.
+6. **Protocol logos:** download from `https://icons.llamao.fi/icons/protocols/<slug>` and `https://icons.llamao.fi/icons/chains/rsz_<chain>.jpg`, convert to PNG with `sharp`, and save to `video/public/logos/`. Load them with `staticFile()`. Slugs needed: maple, aave-v3, fluid-lending, compound-v3, gains-network, pareto-credit, ember-protocol, kamino-lend, morpho-blue, spark-savings. Networks needed: ethereum, arbitrum, base, solana, monad.
+7. **Rebuild the UI as Remotion React components, not screen recordings:**
    - the hero widget
    - the list rows
    - the side panel
@@ -147,7 +148,7 @@ A 3D moment isn't required. The 2D halftone and UI carry the film cleanly, and t
 
 **Scene 3. Introducing (330–450)**
 - Pure dark canvas. The halftone bloom drifts to the centre.
-- Geist Mono `INTRODUCING` fades in, then the logo builds: the green rounded square (rx 9) scales 0.96→1. **Three white coins drop in one by one** (bottom, middle, top; 5-frame stagger, `SPRING_UI`) and **settle into a slightly askew stack**: the top and bottom coins rest at −8°, the middle one level, just as in the logo. A tiny overshoot (≤ 2°) as each lands makes the pile feel real: savings, piling up. The final frame of the logo must match `src/app/icon.svg` exactly. Logo green is `#00AD61`. Then the wordmark **StableSave** reveals with a clip-path wipe over 18 frames.
+- Geist Mono `INTRODUCING` fades in, then the logo builds: the green rounded tile (`LOGO_TILE`) scales 0.96→1. **Three white coins drop in one by one** (bottom, middle, top; 5-frame stagger, `SPRING_UI`) and **settle into a slightly askew stack**: the top and bottom coins rest at −8°, the middle one level, just as in the logo. A tiny overshoot (≤ 2°) as each lands makes the pile feel real: savings, piling up. The final frame of the logo must match `src/app/icon.svg` exactly. Logo green is `#00AD61`. Then the wordmark **StableSave** reveals with a clip-path wipe over 18 frames.
 - Hold for 30 frames, then the logo glides up and shrinks into the header position, becoming the site header (a FLIP move, `SPRING_SOFT`).
 
 ### Act III: The product
@@ -289,6 +290,7 @@ Captions from section 6 are replaced by these VO captions. Where both exist, the
 
 ## 9. Quality checklist (verify before rendering)
 - [ ] All rates, names and logos come from `opportunities.json` and the copied scoring code.
+- [ ] The StableSave logo's final frame is pixel-identical to `src/app/icon.svg`.
 - [ ] No outlines or borders on any UI element, and no colour gradients in the background.
 - [ ] Rubik is used for every headline and number.
 - [ ] The halftone is grey and barely visible, and it never stops or cuts.
