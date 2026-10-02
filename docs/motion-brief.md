@@ -116,7 +116,7 @@ The same five-act story, compressed. The same rules, look and sounds apply. This
 | --- | --- | --- | --- | --- |
 | 0–90 | I. Problem | `YOUR USDC` / `$10,000` / `earning $0.00`, and the "z z" drifts up | "Your stablecoins are sleeping." (starts 8) | soft ticks per word, airy z-z |
 | 90–180 | I. Problem | 6 jargon pills pop in fast (2-frame stagger), then clear with a breath at 165 | "Earning on them shouldn't be homework." (starts 95) | muted taps, long swell at 165 |
-| 180–270 | II. Turn | silence beat (180–192), then logo build: square, three coins rise, wordmark wipe | "Meet StableSave." (starts 200) | sub thump at 192, three rising notes, music chord |
+| 180–270 | II. Turn | silence beat (180–192), then logo build: square, three coins stack then tumble into the S, wordmark wipe | "Meet StableSave." (starts 200) | sub thump at 192, three rising notes, music chord |
 | 270–540 | III. Product | the widget rises (270–300). Type `10000` (keys at 305, 313, 320, 328, 335). **+$512 lands at 335**. Push-in to 1.12 (350–400). `A Safer` pops at 400. Tap Go bigger (450) → C pick, then Play it safe (495) → back to A | "Type what you have… see what it could earn, and how safe it is." (starts 300) | rising ticks, **chime + swell at 335**, pop, taps and chimes |
 | 540–690 | III. Product | glide to the list: 6 rows stagger in (540–580), tap Maple (600), the side panel slides in, the safety ring fills to 87 (620–680) | "Every option. One clear safety grade." (starts 555) | tick patter, open swell, rising tone |
 | 690–780 | IV. Promise | CTA "Go to this pool on app.maple.finance ↗" is pressed at 705, then the shield line appears | "You deposit on the official app. We never touch your money." (starts 690) | firm tap + confirm notes |
@@ -147,7 +147,7 @@ A 3D moment isn't required. The 2D halftone and UI carry the film cleanly, and t
 
 **Scene 3. Introducing (330–450)**
 - Pure dark canvas. The halftone bloom drifts to the centre.
-- Geist Mono `INTRODUCING` fades in, then the logo builds: the green rounded square (rx 9) scales 0.96→1, the three coin bars rise into place bottom to top (5-frame stagger, `SPRING_UI`), and the wordmark **StableSave** reveals with a clip-path wipe over 18 frames.
+- Geist Mono `INTRODUCING` fades in, then the logo builds: the green rounded square (rx 9) scales 0.96→1. **Three coins drop in as a perfectly level stack** (bottom, middle, top, 5-frame stagger, `SPRING_UI`). On the last landing they **tumble into the S**: top coin to −16°, middle to +20°, bottom to −16°, each sliding to its final offset (`SPRING_SOFT`, 2-frame stagger). Each coin has a thin lighter edge so it reads as a coin. The story in one beat: a stack of savings becomes *S* for StableSave. Then the wordmark **StableSave** reveals with a clip-path wipe over 18 frames.
 - Hold for 30 frames, then the logo glides up and shrinks into the header position, becoming the site header (a FLIP move, `SPRING_SOFT`).
 
 ### Act III: The product
@@ -196,7 +196,7 @@ A 3D moment isn't required. The 2D halftone and UI carry the film cleanly, and t
 
 **Scene 10. End card (1680–1800)**
 - Fade (12 frames) to the dark canvas with the halftone arcs at their most visible, still faint.
-- The logo builds again (same as Scene 3, faster). Under it, in Rubik 34 px `ink2`: **"Find where your stablecoins earn the most."**
+- The logo builds again (coins stack, then tumble into the S, same as Scene 3, faster). Under it, in Rubik 34 px `ink2`: **"Find where your stablecoins earn the most."**
 - Below, in Geist Mono: `stablesave.vercel.app` and `NO WALLET · NO SIGN-UP · FREE`.
 - Final 40 frames: completely still. Only the halftone keeps breathing.
 
@@ -234,7 +234,7 @@ Build these **procedurally** so they are licence-free and match the live site's 
 | 300 | Noise clears | long `close` swell (0.8 s, 2400 → 300 Hz) with a reverse-cymbal swell |
 | 330–360 | Silence | ~0.5 s of true silence (no music) before the reveal |
 | 360 | "Introducing" | soft sub thump (60 Hz, 120 ms) + music chord |
-| 372, 377, 382 | Logo coins rise | three ascending `select` notes (C6, E6, G6) |
+| 372, 377, 382 | Logo coins stack, then tumble into the S | three soft ascending notes (D5, F♯5, A5) as they land, then one airy swell as they tilt into the S |
 | 400 | Wordmark wipe | soft `open` swell |
 | 470–540 | Widget assembles | `open` swell, then a `tap` as each panel settles |
 | 615 | Cursor clicks amount | `tap` |

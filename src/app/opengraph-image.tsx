@@ -335,10 +335,19 @@ function Label({ children, color = INK_3 }: { children: React.ReactNode; color?:
 function Mark({ size }: { size: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32">
-      <rect width="32" height="32" rx="8" fill="#0FA968" />
-      <rect x="6.5" y="19.5" width="12" height="5" rx="2.5" fill="#fff" fillOpacity=".55" />
-      <rect x="10" y="13.5" width="12" height="5" rx="2.5" fill="#fff" fillOpacity=".78" />
-      <rect x="13.5" y="7.5" width="12" height="5" rx="2.5" fill="#fff" />
+      <rect width="32" height="32" rx="9" fill="#0FA968" />
+      <g transform="translate(17.6 9.6) rotate(-16)">
+        <rect x="-7.6" y="-1.15" width="15.2" height="4.6" rx="2.3" fill="#BFEBD5" />
+        <rect x="-7.6" y="-2.6" width="15.2" height="4.6" rx="2.3" fill="#FFFFFF" />
+      </g>
+      <g transform="translate(16 16.2) rotate(20)">
+        <rect x="-7.6" y="-1.15" width="15.2" height="4.6" rx="2.3" fill="#9FDDBF" />
+        <rect x="-7.6" y="-2.6" width="15.2" height="4.6" rx="2.3" fill="#D6F7E6" />
+      </g>
+      <g transform="translate(14.4 22.8) rotate(-16)">
+        <rect x="-7.6" y="-1.15" width="15.2" height="4.6" rx="2.3" fill="#BFEBD5" />
+        <rect x="-7.6" y="-2.6" width="15.2" height="4.6" rx="2.3" fill="#FFFFFF" />
+      </g>
     </svg>
   );
 }

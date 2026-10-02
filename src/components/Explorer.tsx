@@ -62,8 +62,12 @@ export function Explorer({
 
   const ranked = useMemo(() => rank(scored, { appetite, sort, chains, asset }), [scored, appetite, sort, chains, asset]);
   // The headline pick should be one a beginner can act on: grade A/B unless they chose "Go bigger".
-  const top =
-    appetite === "adventurous" ? ranked[0] : (ranked.find((o) => o.grade === "A" || o.grade === "B") ?? ranked[0]);
+  // The hero answer depends only on amount, coin and risk; sorting or filtering
+  // the list below must never change it.
+  const top = useMemo(() => {
+    const best = rank(scored, { appetite, sort: "match", chains: [], asset });
+    return appetite === "adventurous" ? best[0] : (best.find((o) => o.grade === "A" || o.grade === "B") ?? best[0]);
+  }, [scored, appetite, asset]);
 
   const stats = useMemo(() => {
     const pool = scored.filter((o) => o.asset === asset);

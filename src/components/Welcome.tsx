@@ -122,10 +122,10 @@ export function Welcome() {
           >
             <div className="flex items-center gap-3">
               <span className="grid size-11 place-items-center rounded-[14px] bg-accent-soft">
-                <svg width="22" height="22" viewBox="0 0 32 32" aria-hidden>
-                  <rect x="6.5" y="19.5" width="12" height="5" rx="2.5" fill="var(--accent)" fillOpacity=".45" />
-                  <rect x="10" y="13.5" width="12" height="5" rx="2.5" fill="var(--accent)" fillOpacity=".7" />
-                  <rect x="13.5" y="7.5" width="12" height="5" rx="2.5" fill="var(--accent)" />
+                <svg width="24" height="24" viewBox="0 0 32 32" aria-hidden>
+                  <g transform="translate(17.6 9.6) rotate(-16)"><rect x="-7.6" y="-2.6" width="15.2" height="4.6" rx="2.3" fill="var(--accent)" /></g>
+                  <g transform="translate(16 16.2) rotate(20)"><rect x="-7.6" y="-2.6" width="15.2" height="4.6" rx="2.3" fill="var(--accent)" fillOpacity=".6" /></g>
+                  <g transform="translate(14.4 22.8) rotate(-16)"><rect x="-7.6" y="-2.6" width="15.2" height="4.6" rx="2.3" fill="var(--accent)" /></g>
                 </svg>
               </span>
               <span className="label">Welcome to StableSave</span>

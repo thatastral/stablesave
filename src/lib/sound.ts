@@ -99,26 +99,26 @@ export function play(name: SoundName) {
       const now = performance.now();
       if (now - lastTick < 45) return;
       lastTick = now;
-      tone(c, { from: 1250 + Math.random() * 120, dur: 0.05, gain: 0.014, attack: 0.004 });
+      tone(c, { from: 1100 + Math.random() * 100, dur: 0.05, gain: 0.009, attack: 0.005 });
       break;
     }
-    case "tap": // risk comfort change
-      tone(c, { from: 520, to: 470, dur: 0.12, gain: 0.03, attack: 0.008 });
+    case "tap": // risk comfort change: a single soft, rounded pluck
+      tone(c, { from: 587, dur: 0.32, gain: 0.011, attack: 0.025 });
       break;
     case "select": // choosing a coin
-      tone(c, { from: 587, dur: 0.18, gain: 0.025, attack: 0.01 });
-      tone(c, { from: 880, at: 0.06, dur: 0.24, gain: 0.02, attack: 0.012 });
+      tone(c, { from: 587, dur: 0.24, gain: 0.012, attack: 0.02 });
+      tone(c, { from: 880, at: 0.06, dur: 0.3, gain: 0.009, attack: 0.025 });
       break;
     case "pop": // add to compare
-      tone(c, { from: 440, to: 660, dur: 0.16, gain: 0.03, attack: 0.01 });
+      tone(c, { from: 494, to: 587, dur: 0.22, gain: 0.013, attack: 0.02 });
       break;
     case "chime": // the answer changes: soft, airy fifth
-      tone(c, { from: 784, dur: 0.9, gain: 0.018, attack: 0.03 });
-      tone(c, { from: 1175, at: 0.09, dur: 1.0, gain: 0.013, attack: 0.04 });
+      tone(c, { from: 659, dur: 0.9, gain: 0.009, attack: 0.06 });
+      tone(c, { from: 988, at: 0.08, dur: 1.0, gain: 0.006, attack: 0.07 });
       break;
     case "open": // a pool opens: a slow, warm swell, no noise
-      tone(c, { from: 262, to: 294, dur: 0.55, gain: 0.022, attack: 0.09 });
-      tone(c, { from: 392, to: 440, at: 0.04, dur: 0.6, gain: 0.014, attack: 0.11 });
+      tone(c, { from: 262, to: 294, dur: 0.6, gain: 0.014, attack: 0.12 });
+      tone(c, { from: 392, to: 440, at: 0.05, dur: 0.65, gain: 0.009, attack: 0.14 });
       break;
     case "toggleOn": // confirms sounds were turned on
       tone(c, { from: 587, dur: 0.2, gain: 0.025 });
