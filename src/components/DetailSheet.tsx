@@ -2,12 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Drawer } from "vaul";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import type { ScoredOpportunity } from "@/lib/types";
 import { formatPct, formatUsd, hostname } from "@/lib/format";
 import { GRADE_LABEL, projectedEarnings } from "@/lib/scoring";
 import { fetchPoolDetail, type PoolDetail } from "@/lib/data";
 import { ApyChart } from "./ApyChart";
+import { track } from "@vercel/analytics";
 import { netEarnings } from "@/lib/fees";
 // Watch button paused for now (see Explorer).
 // import { WatchButton } from "./Watch";
@@ -59,6 +60,9 @@ function usePoolDetail(id: string) {
 }
 
 function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }) {
+  useEffect(() => {
+    track("pool_open", { protocol: item.protocol.name, chain: item.chain, grade: item.grade });
+  }, [item]);
   const [range, setRange] = useState<Range>("30");
   const [scrub, setScrub] = useState<{ t: number; apy: number } | null>(null);
   const detail = usePoolDetail(item.id);
@@ -279,6 +283,15 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
           target="_blank"
           rel="noopener noreferrer"
           aria-busy={detail.status === "loading"}
+          onClick={() =>
+            track("deposit_click", {
+              protocol: item.protocol.name,
+              chain: item.chain,
+              grade: item.grade,
+              exactPool: exact,
+              amountBucket: amount < 1_000 ? "<1k" : amount < 10_000 ? "1k-10k" : amount < 100_000 ? "10k-100k" : "100k+",
+            })
+          }
           className="pressable flex h-13 w-full items-center justify-center gap-2 rounded-full bg-ink font-display text-[16px] font-medium text-canvas"
         >
           {exact ? "Go to this pool on" : "Open"} {site} <ArrowUpRight />
@@ -286,8 +299,54 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
         <p className="mt-2.5 flex items-center justify-center gap-1.5 text-center text-[12px] text-ink-3">
           <ShieldIcon size={13} /> You’ll deposit on {site}. StableSave never touches your money.
         </p>
+        <NotifyInterest protocol={item.protocol.name} />
       </div>
     </>
+  );
+}
+
+/**
+ * Measures demand for rate alerts before building them: one tap records
+ * interest, nothing else happens yet.
+ */
+function NotifyInterest({ protocol }: { protocol: string }) {
+  const [done, setDone] = useState(() => {
+    try {
+      return localStorage.getItem("stablesave:notify-interest") === "1";
+    } catch {
+      return false;
+    }
+  });
+  return (
+    <div className="mt-2 flex justify-center">
+      <AnimatePresence mode="wait" initial={false}>
+        {done ? (
+          <motion.p
+            key="done"
+            initial={{ opacity: 0, y: 4, filter: "blur(2px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            className="text-[12px] text-accent-ink"
+          >
+            Thanks! You’ll be first to know when rate alerts arrive.
+          </motion.p>
+        ) : (
+          <motion.button
+            key="ask"
+            exit={{ opacity: 0, y: -4, filter: "blur(2px)", transition: { duration: 0.12 } }}
+            onClick={() => {
+              track("notify_interest", { protocol });
+              try {
+                localStorage.setItem("stablesave:notify-interest", "1");
+              } catch {}
+              setDone(true);
+            }}
+            className="text-[12px] text-ink-3 underline decoration-dotted underline-offset-2 transition-colors hover:text-ink"
+          >
+            Want a ping when this rate changes? Notify me
+          </motion.button>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
