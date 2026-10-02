@@ -3,7 +3,8 @@
 import { AnimatePresence, motion } from "motion/react";
 import type { ScoredOpportunity } from "@/lib/types";
 import { formatPct, formatUsd } from "@/lib/format";
-import { GRADE_LABEL, projectedEarnings } from "@/lib/scoring";
+import { GRADE_LABEL } from "@/lib/scoring";
+import { netEarnings } from "@/lib/fees";
 import { AnimatedNumber, Check, Plus, ProtocolMark, gradeColor, spring } from "./primitives";
 import { play } from "@/lib/sound";
 
@@ -57,7 +58,7 @@ export function OpportunityList({
                       {formatPct(o.apy)}
                     </span>
                     <span className="mt-0.5 block text-[12px] font-medium text-accent-ink tabular">
-                      +<AnimatedNumber value={projectedEarnings(amount, o.apy)} format={(n) => formatUsd(n)} />/yr
+                      +<AnimatedNumber value={Math.max(0, netEarnings(amount, o.apy, o.chain).net)} format={(n) => formatUsd(n)} />/yr
                     </span>
                   </span>
                 </button>

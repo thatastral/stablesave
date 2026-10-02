@@ -8,6 +8,8 @@ import { formatPct, formatUsd, hostname } from "@/lib/format";
 import { GRADE_LABEL, projectedEarnings } from "@/lib/scoring";
 import { fetchPoolDetail, type PoolDetail } from "@/lib/data";
 import { ApyChart } from "./ApyChart";
+import { netEarnings } from "@/lib/fees";
+import { WatchButton } from "./Watch";
 import { Panel } from "./Panel";
 import { AnimatedNumber, ArrowUpRight, ProtocolMark, Segmented, ShieldIcon, TokenIcon, gradeColor, spring } from "./primitives";
 import { Term } from "./Term";
@@ -85,13 +87,16 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
         <div className="flex items-center gap-3.5">
           <ProtocolMark logo={item.protocol.logo} name={item.protocol.name} chain={item.chain} size={52} />
           <div className="min-w-0 flex-1">
-            <Drawer.Title className="truncate pr-12 font-display text-[22px] leading-tight font-semibold tracking-[-0.01em] text-ink">
+            <Drawer.Title className="truncate font-display text-[22px] leading-tight font-semibold tracking-[-0.01em] text-ink">
               {item.protocol.name}
             </Drawer.Title>
             <p className="truncate text-[14px] text-ink-3">
               {item.poolMeta ? `${item.poolMeta} · ` : ""}
               {item.symbol} on the {item.chain} network
             </p>
+          </div>
+          <div className="md:mr-11">
+            <WatchButton item={item} />
           </div>
         </div>
 
@@ -152,6 +157,7 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
               </div>
             ))}
           </div>
+          <FeesNote amount={amount} item={item} />
           <p className="mt-2 text-[12px] text-ink-3">An estimate if today’s rate stayed the same. It usually won’t.</p>
         </Section>
 
@@ -281,6 +287,32 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
         </p>
       </div>
     </>
+  );
+}
+
+/** What network fees do to the earnings: plain numbers, no jargon. */
+function FeesNote({ amount, item }: { amount: number; item: ScoredOpportunity }) {
+  const e = netEarnings(amount, item.apy, item.chain);
+  const days = Math.ceil(e.breakEvenDays);
+  return (
+    <div className="mt-3 overflow-hidden rounded-[18px] bg-surface-2 px-1 text-[13px]">
+      <div className="flex items-baseline justify-between px-3.5 py-2.5">
+        <span className="text-ink-3">Network fees to get in and out ({item.chain}, est.)</span>
+        <span className="font-medium text-ink tabular">−{formatUsd(e.fees)}</span>
+      </div>
+      <div className="flex items-baseline justify-between border-t border-[var(--hairline)] px-3.5 py-2.5">
+        <span className="font-medium text-ink">You’d keep in a year</span>
+        <span className="font-display font-semibold text-accent-ink tabular">+{formatUsd(Math.max(0, e.net))}</span>
+      </div>
+      <p className={`border-t border-[var(--hairline)] px-3.5 py-2.5 ${e.costly ? "text-[var(--grade-c)]" : "text-ink-3"}`}>
+        {Number.isFinite(e.breakEvenDays)
+          ? days <= 1
+            ? "Fees are covered within a day."
+            : `Your first ${days} days of interest cover the fees.`
+          : "At this amount the interest never covers the fees."}
+        {e.costly && " Try a cheaper network like Base or Arbitrum, or a larger amount."}
+      </p>
+    </div>
   );
 }
 

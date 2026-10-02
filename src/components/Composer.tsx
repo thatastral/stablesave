@@ -4,7 +4,8 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import type { Appetite, Asset, ScoredOpportunity } from "@/lib/types";
 import { formatPct, formatUsd } from "@/lib/format";
-import { APPETITES, GRADE_LABEL, projectedEarnings } from "@/lib/scoring";
+import { APPETITES, GRADE_LABEL } from "@/lib/scoring";
+import { netEarnings } from "@/lib/fees";
 import { AnimatedNumber, Chevron, ProtocolMark, Segmented, TokenIcon, gradeColor } from "./primitives";
 import { play } from "@/lib/sound";
 
@@ -39,7 +40,9 @@ export function Composer({
 }) {
   const display = amount ? amount.toLocaleString("en-US") : "";
   const hint = APPETITES.find((a) => a.key === appetite)!.hint;
-  const yearly = top ? projectedEarnings(amount, top.apy) : 0;
+  const earn = top ? netEarnings(amount, top.apy, top.chain) : null;
+  // Show what you actually keep after network fees to get in and out.
+  const yearly = earn ? Math.max(0, earn.net) : 0;
 
   // A soft chime when the answer changes to a different pick (not on first load).
   const lastTop = useRef(top?.id);
@@ -147,7 +150,7 @@ export function Composer({
           className="group w-full rounded-[22px] bg-[color-mix(in_srgb,var(--accent-soft)_55%,var(--surface-2))] px-5 pt-4 pb-4 text-left transition-colors duration-200 hover:bg-accent-soft disabled:cursor-default"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[13px] font-medium text-ink-3">You could earn in a year</span>
+            <span className="text-[13px] font-medium text-ink-3">You could keep in a year</span>
           </div>
           <div className="mt-1.5 flex items-center justify-between gap-3">
             <p
@@ -185,6 +188,12 @@ export function Composer({
                 at <span className="font-semibold text-ink tabular">{formatPct(top.apy)}</span> a year
               </span>
               <GradeInline grade={top.grade} />
+            </p>
+          )}
+          {top && earn && earn.fees >= 0.5 && (
+            <p className={`mt-1.5 text-[12px] ${earn.costly ? "text-[var(--grade-c)]" : "text-ink-3"}`}>
+              After ~{formatUsd(earn.fees)} in network fees
+              {earn.costly ? " · fees eat a big share at this amount" : ""}
             </p>
           )}
         </button>

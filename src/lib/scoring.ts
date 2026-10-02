@@ -104,13 +104,23 @@ const MIN_SAFETY: Record<Appetite, number> = { conservative: 60, balanced: 45, a
 // How much safety matters relative to yield in the match score.
 const SAFETY_EXPONENT: Record<Appetite, number> = { conservative: 3, balanced: 1.5, adventurous: 1 };
 
-export function scoreAll(list: Opportunity[], appetite: Appetite): ScoredOpportunity[] {
+export function scoreAll(
+  list: Opportunity[],
+  appetite: Appetite,
+  /** When set, rank on what you'd keep after network fees for this amount. */
+  feesFor?: { amount: number; roundTrip: (chain: string) => number },
+): ScoredOpportunity[] {
   return list.map((o) => {
     const factors = scoreFactors(o);
     const safety = Math.round(factors.reduce((s, f) => s + f.score * f.weight, 0));
+    // Net APY: a year's interest minus the cost of getting in and out.
+    const netApy =
+      feesFor && feesFor.amount > 0
+        ? Math.max(0, o.apy - (feesFor.roundTrip(o.chain) / feesFor.amount) * 100)
+        : o.apy;
     // ln(1 + APY) gives diminishing returns, so a 60% APY can't bulldoze a
     // well-grounded 6%: extra yield has to be earned with extra safety.
-    const match = Math.log1p(o.apy) * Math.pow(safety / 100, SAFETY_EXPONENT[appetite]);
+    const match = Math.log1p(netApy) * Math.pow(safety / 100, SAFETY_EXPONENT[appetite]);
     return { ...o, factors, safety, grade: gradeFor(safety), match };
   });
 }

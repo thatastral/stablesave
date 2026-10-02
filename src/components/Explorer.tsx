@@ -5,12 +5,14 @@ import { LayoutGroup } from "motion/react";
 import type { Appetite, Asset, Opportunity, SortKey } from "@/lib/types";
 import { formatPct } from "@/lib/format";
 import { rank, scoreAll } from "@/lib/scoring";
+import { roundTripFees } from "@/lib/fees";
 import { Composer } from "./Composer";
 import { Filters } from "./Filters";
 import { EmptyState, OpportunityList } from "./OpportunityList";
 import { DetailSheet } from "./DetailSheet";
 import { CompareSheet, CompareTray, MAX_COMPARE } from "./Compare";
 import { Welcome } from "./Welcome";
+import { Watchlist } from "./Watch";
 
 const PAGE = 12;
 
@@ -51,7 +53,12 @@ export function Explorer({
     return () => clearTimeout(t);
   }, [amount, asset, appetite, openId]);
 
-  const scored = useMemo(() => scoreAll(opportunities, appetite), [opportunities, appetite]);
+  // Round to the nearest $10 so ranking doesn't reshuffle on every keystroke.
+  const feeAmount = Math.round(amount / 10) * 10;
+  const scored = useMemo(
+    () => scoreAll(opportunities, appetite, { amount: feeAmount, roundTrip: roundTripFees }),
+    [opportunities, appetite, feeAmount],
+  );
   const byId = useMemo(() => new Map(scored.map((o) => [o.id, o])), [scored]);
 
   const chainOptions = useMemo(() => {
@@ -115,6 +122,8 @@ export function Explorer({
       />
 
       <MarketLine {...stats} asset={asset} updatedAt={updatedAt} />
+
+      <Watchlist current={byId} onOpen={open} />
 
       <section id="options" className="mx-auto mt-14 w-full max-w-[680px] scroll-mt-20 px-4 pb-40">
         <LayoutGroup>
