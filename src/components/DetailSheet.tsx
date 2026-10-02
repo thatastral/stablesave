@@ -9,7 +9,8 @@ import { GRADE_LABEL, projectedEarnings } from "@/lib/scoring";
 import { fetchPoolDetail, type PoolDetail } from "@/lib/data";
 import { ApyChart } from "./ApyChart";
 import { netEarnings } from "@/lib/fees";
-import { WatchButton } from "./Watch";
+// Watch button paused for now (see Explorer).
+// import { WatchButton } from "./Watch";
 import { Panel } from "./Panel";
 import { AnimatedNumber, ArrowUpRight, ProtocolMark, Segmented, ShieldIcon, TokenIcon, gradeColor, spring } from "./primitives";
 import { Term } from "./Term";
@@ -87,7 +88,7 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
         <div className="flex items-center gap-3.5">
           <ProtocolMark logo={item.protocol.logo} name={item.protocol.name} chain={item.chain} size={52} />
           <div className="min-w-0 flex-1">
-            <Drawer.Title className="truncate font-display text-[22px] leading-tight font-semibold tracking-[-0.01em] text-ink">
+            <Drawer.Title className="truncate pr-12 font-display text-[22px] leading-tight font-semibold tracking-[-0.01em] text-ink">
               {item.protocol.name}
             </Drawer.Title>
             <p className="truncate text-[14px] text-ink-3">
@@ -95,9 +96,9 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
               {item.symbol} on the {item.chain} network
             </p>
           </div>
-          <div className="md:mr-11">
+          {/* <div className="md:mr-11">
             <WatchButton item={item} />
-          </div>
+          </div> */}
         </div>
 
         {/* Rate + chart */}

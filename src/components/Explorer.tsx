@@ -12,7 +12,8 @@ import { EmptyState, OpportunityList } from "./OpportunityList";
 import { DetailSheet } from "./DetailSheet";
 import { CompareSheet, CompareTray, MAX_COMPARE } from "./Compare";
 import { Welcome } from "./Welcome";
-import { Watchlist } from "./Watch";
+// Watchlist + alerts are paused for now; re-enable by restoring these two lines.
+// import { Watchlist } from "./Watch";
 
 const PAGE = 12;
 
@@ -123,7 +124,7 @@ export function Explorer({
 
       <MarketLine {...stats} asset={asset} updatedAt={updatedAt} />
 
-      <Watchlist current={byId} onOpen={open} />
+      {/* <Watchlist current={byId} onOpen={open} /> */}
 
       <section id="options" className="mx-auto mt-14 w-full max-w-[680px] scroll-mt-20 px-4 pb-40">
         <LayoutGroup>
