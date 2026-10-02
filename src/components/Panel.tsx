@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { Drawer } from "vaul";
+import { play } from "@/lib/sound";
 import { useMinWidth } from "./primitives";
 
 /**
@@ -19,6 +21,11 @@ export function Panel({
   children: React.ReactNode;
 }) {
   const desktop = useMinWidth(768);
+  const wasOpen = useRef(open);
+  useEffect(() => {
+    if (open !== wasOpen.current) play(open ? "open" : "close");
+    wasOpen.current = open;
+  }, [open]);
   return (
     <Drawer.Root open={open} onOpenChange={onOpenChange} direction={desktop ? "right" : "bottom"}>
       <Drawer.Portal>

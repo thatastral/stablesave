@@ -5,6 +5,7 @@ import { useEffect, useId, useState, useSyncExternalStore } from "react";
 import type { Asset, Grade } from "@/lib/types";
 import { chainIcon } from "@/lib/format";
 import { GRADE_LABEL } from "@/lib/scoring";
+import { play } from "@/lib/sound";
 
 export const spring = { type: "spring", duration: 0.45, bounce: 0.18 } as const;
 
@@ -173,7 +174,10 @@ export function Segmented<T extends string>({
             key={o.key}
             role="radio"
             aria-checked={active}
-            onClick={() => onChange(o.key)}
+            onClick={() => {
+              if (!active) play("tap");
+              onChange(o.key);
+            }}
             className={`relative flex items-center gap-1.5 rounded-full px-2.5 font-display font-medium whitespace-nowrap transition-colors duration-150 sm:px-3.5 ${h} ${
               active ? "text-ink" : "text-ink-3 hover:text-ink-2"
             }`}

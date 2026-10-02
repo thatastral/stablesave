@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { HelpButton } from "./Welcome";
 import { ThemeToggle } from "./ThemeToggle";
+import { SoundToggle } from "./SoundToggle";
 
 /** Three coins stepping upward: savings that grow. Flat on purpose. */
 export function LogoMark({ size = 26 }: { size?: number }) {
@@ -33,6 +34,7 @@ export function Header() {
             How we rate safety
           </Link>
           <HelpButton />
+          <SoundToggle />
           <ThemeToggle />
         </nav>
       </div>

@@ -6,6 +6,7 @@ import type { Appetite, Asset, ScoredOpportunity } from "@/lib/types";
 import { formatPct, formatUsd } from "@/lib/format";
 import { APPETITES, GRADE_LABEL, projectedEarnings } from "@/lib/scoring";
 import { AnimatedNumber, Chevron, ProtocolMark, Segmented, TokenIcon, gradeColor } from "./primitives";
+import { play } from "@/lib/sound";
 
 const PRESETS = [100, 1_000, 10_000, 50_000];
 const MAX = 1_000_000_000;
@@ -39,6 +40,13 @@ export function Composer({
   const display = amount ? amount.toLocaleString("en-US") : "";
   const hint = APPETITES.find((a) => a.key === appetite)!.hint;
   const yearly = top ? projectedEarnings(amount, top.apy) : 0;
+
+  // A soft chime when the answer changes to a different pick (not on first load).
+  const lastTop = useRef(top?.id);
+  useEffect(() => {
+    if (top?.id && lastTop.current && top.id !== lastTop.current) play("chime");
+    lastTop.current = top?.id;
+  }, [top?.id]);
 
   return (
     <section className="mx-auto flex w-full max-w-[520px] flex-col items-center px-4 pt-12 text-center sm:pt-16">
@@ -87,6 +95,7 @@ export function Composer({
                 placeholder="0"
                 onChange={(e) => {
                   const n = Number(e.target.value.replace(/[^\d]/g, ""));
+                  play("tick");
                   onAmount(Math.min(n, MAX));
                 }}
                 className="tabular w-full min-w-0 bg-transparent caret-accent outline-none placeholder:text-ink-3"
@@ -98,7 +107,10 @@ export function Composer({
             {PRESETS.map((p) => (
               <button
                 key={p}
-                onClick={() => onAmount(p)}
+                onClick={() => {
+                  play("tap");
+                  onAmount(p);
+                }}
                 aria-pressed={amount === p}
                 className={`pressable h-7 rounded-full px-3 font-display text-[12px] font-medium tabular transition-colors duration-150 ${
                   amount === p ? "bg-ink text-canvas" : "bg-surface text-ink-2 shadow-card hover:text-ink"
@@ -252,7 +264,10 @@ function TokenSelect({ asset, onChange }: { asset: Asset; onChange: (a: Asset) =
   return (
     <div ref={ref} className="relative shrink-0">
       <button
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => {
+          play("tap");
+          setOpen((o) => !o);
+        }}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`Stablecoin: ${asset}`}
@@ -284,6 +299,7 @@ function TokenSelect({ asset, onChange }: { asset: Asset; onChange: (a: Asset) =
                   role="option"
                   aria-selected={a === asset}
                   onClick={() => {
+                    play("select");
                     onChange(a);
                     setOpen(false);
                   }}

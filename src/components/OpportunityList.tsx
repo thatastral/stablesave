@@ -5,6 +5,7 @@ import type { ScoredOpportunity } from "@/lib/types";
 import { formatPct, formatUsd } from "@/lib/format";
 import { GRADE_LABEL, projectedEarnings } from "@/lib/scoring";
 import { AnimatedNumber, Check, Plus, ProtocolMark, gradeColor, spring } from "./primitives";
+import { play } from "@/lib/sound";
 
 export function OpportunityList({
   items,
@@ -61,7 +62,10 @@ export function OpportunityList({
                   </span>
                 </button>
                 <button
-                  onClick={() => onToggleCompare(o.id)}
+                  onClick={() => {
+                    play(inCompare ? "unpop" : "pop");
+                    onToggleCompare(o.id);
+                  }}
                   aria-pressed={inCompare}
                   aria-label={inCompare ? `Remove ${o.protocol.name} from compare` : `Add ${o.protocol.name} to compare`}
                   title={inCompare ? "Remove from compare" : "Add to compare"}

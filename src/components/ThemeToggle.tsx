@@ -1,9 +1,11 @@
 "use client";
 
 import { THEME_KEY } from "@/lib/theme";
+import { play } from "@/lib/sound";
 
 export function ThemeToggle() {
   function toggle() {
+    play("tap");
     const root = document.documentElement;
     const current =
       root.dataset.theme ?? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");

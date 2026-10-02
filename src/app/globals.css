@@ -67,8 +67,9 @@
     --grade-d: #ff6369;
     --grade-d-soft: rgba(255, 99, 105, 0.14);
 
-    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
-    --shadow-soft: 0 2px 4px rgba(0, 0, 0, 0.3), 0 30px 60px -24px rgba(0, 0, 0, 0.7);
+    /* On near-black, lift surfaces with a faint top rim, not a dark halo. */
+    --shadow-card: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 1px 2px rgba(0, 0, 0, 0.25);
+    --shadow-soft: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 1px 2px rgba(0, 0, 0, 0.3);
     --shadow-float: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 16px 48px -8px rgba(0, 0, 0, 0.7);
   }
 }
@@ -100,8 +101,8 @@
   --grade-d: #ff6369;
   --grade-d-soft: rgba(255, 99, 105, 0.14);
 
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
-  --shadow-soft: 0 2px 4px rgba(0, 0, 0, 0.3), 0 30px 60px -24px rgba(0, 0, 0, 0.7);
+  --shadow-card: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow-soft: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-float: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 16px 48px -8px rgba(0, 0, 0, 0.7);
 }
 
