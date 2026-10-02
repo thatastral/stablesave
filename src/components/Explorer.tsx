@@ -7,7 +7,7 @@ import { formatPct } from "@/lib/format";
 import { projectedEarnings, rank, scoreAll } from "@/lib/scoring";
 import { Composer } from "./Composer";
 import { Filters } from "./Filters";
-import { EmptyState, OpportunityList, TopPick } from "./OpportunityList";
+import { EmptyState, OpportunityList } from "./OpportunityList";
 import { DetailSheet } from "./DetailSheet";
 import { CompareSheet, CompareTray, MAX_COMPARE } from "./Compare";
 import { Welcome } from "./Welcome";
@@ -64,7 +64,6 @@ export function Explorer({
   // The headline pick should be one a beginner can act on: grade A/B unless they chose "Go bigger".
   const top =
     appetite === "adventurous" ? ranked[0] : (ranked.find((o) => o.grade === "A" || o.grade === "B") ?? ranked[0]);
-  const rest = ranked.filter((o) => o !== top);
 
   const stats = useMemo(() => {
     const pool = scored.filter((o) => o.asset === asset);
@@ -96,78 +95,64 @@ export function Explorer({
 
   return (
     <>
-      <div className="mx-auto w-full max-w-[1080px] px-4 pt-10 sm:px-6 sm:pt-14">
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-end lg:gap-8">
-          <Composer
-            amount={amount}
-            asset={asset}
-            appetite={appetite}
-            onAmount={setAmount}
-            onAsset={(a) => {
-              setAsset(a);
-              setChains([]);
-            }}
-            onAppetite={setAppetite}
-          />
-          <MarketPanel {...stats} asset={asset} updatedAt={updatedAt} />
-        </div>
-      </div>
+      <Composer
+        amount={amount}
+        asset={asset}
+        appetite={appetite}
+        top={top}
+        optionCount={ranked.length}
+        onAmount={setAmount}
+        onAsset={(a) => {
+          setAsset(a);
+          setChains([]);
+        }}
+        onAppetite={setAppetite}
+        onOpenTop={() => top && open(top.id)}
+      />
 
-      <div className="mx-auto mt-12 w-full max-w-[1080px] px-4 pb-40 sm:px-6">
+      <MarketLine {...stats} asset={asset} updatedAt={updatedAt} />
+
+      <section id="options" className="mx-auto mt-14 w-full max-w-[680px] scroll-mt-20 px-4 pb-40">
         <LayoutGroup>
-          <div className="flex flex-col gap-5">
-            {top ? (
+          <div className="flex flex-col gap-4">
+            <Filters
+              sort={sort}
+              onSort={setSort}
+              chains={chainOptions}
+              selected={chains}
+              onToggleChain={toggleChain}
+              onClearChains={() => setChains([])}
+              count={ranked.length}
+            />
+            {ranked.length ? (
               <>
-                {sort === "match" && chains.length === 0 ? (
-                  <TopPick item={top} amount={amount} onOpen={() => open(top.id)} />
-                ) : null}
-                <Filters
-                  sort={sort}
-                  onSort={setSort}
-                  chains={chainOptions}
-                  selected={chains}
-                  onToggleChain={toggleChain}
-                  onClearChains={() => setChains([])}
-                  count={ranked.length}
-                />
                 <OpportunityList
-                  items={(sort === "match" && chains.length === 0 ? rest : ranked).slice(0, limit)}
+                  items={ranked.slice(0, limit)}
                   amount={amount}
                   compare={compare}
                   onOpen={open}
                   onToggleCompare={toggleCompare}
                 />
-                {ranked.length > limit + 1 && (
+                {ranked.length > limit && (
                   <button
                     onClick={() => setPaging({ key: filterKey, n: limit + PAGE })}
-                    className="pressable mx-auto h-9 rounded-[10px] border border-line bg-surface px-4 text-[14px] font-medium text-ink"
+                    className="pressable mx-auto h-9 rounded-[10px] bg-surface px-4 text-[13px] font-medium text-ink shadow-[inset_0_0_0_1px_var(--line)]"
                   >
-                    Show more
+                    Show {Math.min(PAGE, ranked.length - limit)} more
                   </button>
                 )}
               </>
             ) : (
-              <>
-                <Filters
-                  sort={sort}
-                  onSort={setSort}
-                  chains={chainOptions}
-                  selected={chains}
-                  onToggleChain={toggleChain}
-                  onClearChains={() => setChains([])}
-                  count={0}
-                />
-                <EmptyState
-                  onReset={() => {
-                    setChains([]);
-                    setAppetite("adventurous");
-                  }}
-                />
-              </>
+              <EmptyState
+                onReset={() => {
+                  setChains([]);
+                  setAppetite("adventurous");
+                }}
+              />
             )}
           </div>
         </LayoutGroup>
-      </div>
+      </section>
 
       <Welcome example={top ? { amount, yearly: projectedEarnings(amount, top.apy) } : null} />
       <DetailSheet
@@ -188,7 +173,7 @@ export function Explorer({
   );
 }
 
-function MarketPanel({
+function MarketLine({
   pools,
   chains,
   apps,
@@ -203,38 +188,28 @@ function MarketPanel({
   asset: Asset;
   updatedAt: string;
 }) {
-  const rows = [
-    { label: "Best grade-A rate", value: formatPct(bestSafe), accent: true },
-    { label: "Options compared", value: String(pools) },
+  const items = [
+    { label: `Best grade-A ${asset}`, value: formatPct(bestSafe), accent: true },
+    { label: "options tracked", value: String(pools) },
     { label: "DeFi apps", value: String(apps) },
-    { label: "Networks", value: String(chains) },
+    { label: "networks", value: String(chains) },
   ];
   return (
-    <aside className="enter rounded-[14px] border border-line bg-surface shadow-card">
-      <div className="flex items-center justify-between border-b border-line px-5 py-3">
-        <p className="label">Market today</p>
-        <p className="label flex items-center gap-1.5 text-ink-2!">
-          {asset}
-        </p>
-      </div>
-      <dl className="px-5 py-1">
-        {rows.map((r, i) => (
-          <div key={r.label} className={`flex items-baseline justify-between py-2.5 ${i ? "border-t border-line" : ""}`}>
-            <dt className="text-[13px] text-ink-3">{r.label}</dt>
-            <dd
-              className={`font-display text-[18px] font-semibold tracking-[-0.01em] tabular ${
-                r.accent ? "text-accent-ink" : "text-ink"
-              }`}
-            >
-              {r.value}
+    <div className="mx-auto mt-10 flex w-full max-w-[680px] flex-col items-center gap-2 px-4">
+      <dl className="flex flex-wrap items-baseline justify-center gap-x-5 gap-y-1.5 text-[13px] text-ink-3">
+        {items.map((s) => (
+          <div key={s.label} className="flex items-baseline gap-1.5">
+            <dd className={`font-display text-[15px] font-semibold tabular ${s.accent ? "text-accent-ink" : "text-ink"}`}>
+              {s.value}
             </dd>
+            <dt>{s.label}</dt>
           </div>
         ))}
       </dl>
-      <p className="border-t border-line px-5 py-2.5 text-[12px] text-ink-3" suppressHydrationWarning>
-        Yearly rates from DeFiLlama · updated {timeAgo(updatedAt)}
+      <p className="label" suppressHydrationWarning>
+        Data from DeFiLlama · updated {timeAgo(updatedAt)}
       </p>
-    </aside>
+    </div>
   );
 }
 
