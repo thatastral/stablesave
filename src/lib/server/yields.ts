@@ -1,3 +1,4 @@
+import { after } from "next/server";
 import snapshot from "@/data/opportunities.json";
 import type { Asset, Opportunity } from "../types";
 
@@ -51,6 +52,24 @@ async function getJson<T>(url: string): Promise<T> {
 
 /* ─── List ────────────────────────────────────────────────────────────────── */
 
+/** How long a cold request waits for live data before showing the saved snapshot. */
+const COLD_WAIT_MS = 2500;
+
+const snapshotFeed = (): OpportunityFeed => ({
+  ...(snapshot as Omit<OpportunityFeed, "source">),
+  source: "snapshot",
+});
+
+/** Keep a background refresh alive after the response is sent (serverless). */
+function keepAlive(p: Promise<unknown>) {
+  const safe = p.catch((err) => console.error("[yields] background refresh failed", err));
+  try {
+    after(() => safe);
+  } catch {
+    // Outside a request scope (e.g. build time): nothing to keep alive.
+  }
+}
+
 export async function getOpportunityFeed(): Promise<OpportunityFeed> {
   const cached = g.__ssFeed;
   const fresh = cached && Date.now() - cached.at < LIST_TTL;
@@ -60,14 +79,21 @@ export async function getOpportunityFeed(): Promise<OpportunityFeed> {
 
   // Serve stale data instantly and refresh in the background.
   if (cached) {
-    refresh.catch(() => {});
+    keepAlive(refresh);
     return cached.value;
   }
+
+  // Cold start: never make a visitor wait on a slow upstream. Give live data a
+  // short head start, otherwise show the saved snapshot and keep refreshing.
+  const timeout = new Promise<null>((r) => setTimeout(() => r(null), COLD_WAIT_MS));
   try {
-    return await refresh;
+    const live = await Promise.race([refresh, timeout]);
+    if (live) return live;
+    keepAlive(refresh);
+    return snapshotFeed();
   } catch (err) {
     console.error("[yields] live fetch failed, serving snapshot", err);
-    return { ...(snapshot as Omit<OpportunityFeed, "source">), source: "snapshot" };
+    return snapshotFeed();
   }
 }
 

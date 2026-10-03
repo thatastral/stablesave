@@ -9,8 +9,8 @@ const ASSETS = { USDC: "USDC", USDT: "USDT", USDT0: "USDT" };
 const MIN_TVL = 1_000_000;
 
 const [pools, protocols] = await Promise.all([
-  fetch("https://yields.llama.fi/pools").then((r) => r.json()),
-  fetch("https://api.llama.fi/protocols").then((r) => r.json()),
+  fetch("https://yields.llama.fi/pools", { signal: AbortSignal.timeout(90_000) }).then((r) => r.json()),
+  fetch("https://api.llama.fi/protocols", { signal: AbortSignal.timeout(90_000) }).then((r) => r.json()),
 ]);
 
 const bySlug = new Map(protocols.map((p) => [p.slug, p]));
@@ -50,6 +50,9 @@ const opportunities = pools.data
   })
   // Pools without an official URL can't satisfy "take me to the protocol".
   .filter((o) => o.protocol.url);
+
+// Never overwrite a good snapshot with a broken or partial response.
+if (opportunities.length < 20) throw new Error(`Only ${opportunities.length} opportunities; keeping the existing snapshot`);
 
 await writeFile(
   new URL("../src/data/opportunities.json", import.meta.url),

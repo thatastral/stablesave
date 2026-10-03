@@ -9,6 +9,7 @@ import { GRADE_LABEL, projectedEarnings } from "@/lib/scoring";
 import { fetchPoolDetail, type PoolDetail } from "@/lib/data";
 import { ApyChart } from "./ApyChart";
 import { track } from "@vercel/analytics";
+import posthog from "posthog-js";
 import { netEarnings } from "@/lib/fees";
 // Watch button paused for now (see Explorer).
 // import { WatchButton } from "./Watch";
@@ -22,6 +23,9 @@ const HORIZONS = [
   { days: 182, label: "6 months" },
   { days: 365, label: "1 year" },
 ];
+const isPostHogConfigured = Boolean(
+  process.env.NEXT_PUBLIC_POSTHOG_KEY && process.env.NEXT_PUBLIC_POSTHOG_HOST,
+);
 
 export function DetailSheet({
   item,
@@ -61,7 +65,9 @@ function usePoolDetail(id: string) {
 
 function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }) {
   useEffect(() => {
-    track("pool_open", { protocol: item.protocol.name, chain: item.chain, grade: item.grade });
+    const properties = { protocol: item.protocol.name, chain: item.chain, grade: item.grade };
+    track("pool_open", properties);
+    if (isPostHogConfigured) posthog.capture("pool_open", properties);
   }, [item]);
   const [range, setRange] = useState<Range>("30");
   const [scrub, setScrub] = useState<{ t: number; apy: number } | null>(null);
@@ -283,15 +289,17 @@ function SheetBody({ item, amount }: { item: ScoredOpportunity; amount: number }
           target="_blank"
           rel="noopener noreferrer"
           aria-busy={detail.status === "loading"}
-          onClick={() =>
-            track("deposit_click", {
+          onClick={() => {
+            const properties = {
               protocol: item.protocol.name,
               chain: item.chain,
               grade: item.grade,
               exactPool: exact,
               amountBucket: amount < 1_000 ? "<1k" : amount < 10_000 ? "1k-10k" : amount < 100_000 ? "10k-100k" : "100k+",
-            })
-          }
+            };
+            track("deposit_click", properties);
+            if (isPostHogConfigured) posthog.capture("deposit_click", properties);
+          }}
           className="pressable flex h-13 w-full items-center justify-center gap-2 rounded-full bg-ink font-display text-[16px] font-medium text-canvas"
         >
           {exact ? "Go to this pool on" : "Open"} {site} <ArrowUpRight />
@@ -334,7 +342,9 @@ function NotifyInterest({ protocol }: { protocol: string }) {
             key="ask"
             exit={{ opacity: 0, y: -4, filter: "blur(2px)", transition: { duration: 0.12 } }}
             onClick={() => {
-              track("notify_interest", { protocol });
+              const properties = { protocol };
+              track("notify_interest", properties);
+              if (isPostHogConfigured) posthog.capture("notify_interest", properties);
               try {
                 localStorage.setItem("stablesave:notify-interest", "1");
               } catch {}
