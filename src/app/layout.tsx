@@ -3,6 +3,7 @@ import { Geist_Mono, Inter, Rubik } from "next/font/google";
 import { SITE } from "@/lib/site";
 import { themeScript } from "@/lib/theme";
 import { Analytics } from "@vercel/analytics/next";
+import Script from "next/script";
 import "./globals.css";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
@@ -47,6 +48,33 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {children}
         {/* Privacy-friendly page views (no cookies) plus a few product events. */}
         <Analytics />
+        {/* Maze: in-product research (surveys, tests). Loads after the page is interactive. */}
+        <Script id="maze-universal-snippet" strategy="afterInteractive">{`(function (m, a, z, e) {
+  var s, t, u, v;
+  try {
+    t = m.sessionStorage.getItem('maze-us');
+  } catch (err) {}
+
+  if (!t) {
+    t = new Date().getTime();
+    try {
+      m.sessionStorage.setItem('maze-us', t);
+    } catch (err) {}
+  }
+
+  u = document.currentScript || (function () {
+    var w = document.getElementsByTagName('script');
+    return w[w.length - 1];
+  })();
+  v = u && u.nonce;
+
+  s = a.createElement('script');
+  s.src = z + '?apiKey=' + e;
+  s.async = true;
+  if (v) s.setAttribute('nonce', v);
+  a.getElementsByTagName('head')[0].appendChild(s);
+  m.mazeUniversalSnippetApiKey = e;
+})(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '6e5be1c0-9785-4e5c-9969-09a1bd8dbbfe');`}</Script>
       </body>
     </html>
   );
